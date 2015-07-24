@@ -1,0 +1,1 @@
+require_relative 'generator/phema-to-hds-json'
