@@ -15,5 +15,8 @@
 /log/*.log
 /tmp
 
+# Ignore code coverage output
+/coverage
+
 # Mac file
 .DS_Store
