@@ -27,13 +27,33 @@ class JsonTranslatorTest < MiniTest::Unit::TestCase
 
   def test_reference
     result = PhEMA::HealthDataStandards::JsonTranslator.reference('test')
-    assert_equal 'ED', result["code_obj"]["type"]
-    assert_equal 'test', result["value_obj"]["value"]
+    assert_equal 'REF', result["code_obj"]["code"]
+    assert_equal 'Reference', result["code_obj"]["title"]
+  end
 
-    result = PhEMA::HealthDataStandards::JsonTranslator.reference(nil)
+  def test_definition
+    result = PhEMA::HealthDataStandards::JsonTranslator.definition('test')
+    assert_equal 'DEF', result["code_obj"]["code"]
+    assert_equal 'Definition', result["code_obj"]["title"]
+  end
+
+  def test_initial_population
+    result = PhEMA::HealthDataStandards::JsonTranslator.initial_population('test')
+    assert_equal 'IPOP', result["code_obj"]["code"]
+    assert_equal 'Initial Population', result["code_obj"]["title"]
+  end
+
+  def test_text_attribute
+    result = PhEMA::HealthDataStandards::JsonTranslator.text_attribute('TEST', 'Test', 'This is a test')
+    assert_equal 'ED', result["code_obj"]["type"]
+    assert_equal 'TEST', result["code_obj"]["code"]
+    assert_equal 'Test', result["code_obj"]["title"]
+    assert_equal 'This is a test', result["value_obj"]["value"]
+
+    result = PhEMA::HealthDataStandards::JsonTranslator.text_attribute('A', 'A', nil)
     assert_equal '', result["value_obj"]["value"]
 
-    result = PhEMA::HealthDataStandards::JsonTranslator.reference('With some <html> tags & markup')
+    result = PhEMA::HealthDataStandards::JsonTranslator.text_attribute('A', 'A', 'With some <html> tags & markup')
     assert_equal 'With some &lt;html&gt; tags &amp; markup', result["value_obj"]["value"]
   end
 end

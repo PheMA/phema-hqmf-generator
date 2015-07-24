@@ -32,30 +32,15 @@ module PhEMA
       end
 
       def self.reference(text)
-        {
-          "name" => "Reference",
-          "code" => "REF",
-          "code_obj" => {
-            "code" => "REF",
-            "system" => "2.16.840.1.113883.5.4",
-            "title" => "Reference",
-            "type" => "ED"
-          },
-          "value_obj" => {
-            "value" => text.nil? ? '' : text.encode(:xml => :text)
-          }
-        }
+        text_attribute("REF", "Reference", text)
       end
 
-      private
-      def self.get_measure_score_title(measure_score)
-        case
-          when measure_score == "COHORT" then "Cohort"
-          when measure_score == "CONTVAR" then "Continuous variable"
-          when measure_score == "PROPOR" then "Proportion"
-          when measure_score == "RATIO" then "Ratio"
-          else measure_score
-        end
+      def self.definition(text)
+        text_attribute("DEF", "Definition", text)
+      end
+
+      def self.initial_population(text)
+        text_attribute("IPOP", "Initial Population", text)
       end
 
       def self.text_attribute(code, name, value)
@@ -72,6 +57,17 @@ module PhEMA
             "value" => value.nil? ? '' : value.encode(:xml => :text)
           }
         }
+      end
+
+      private
+      def self.get_measure_score_title(measure_score)
+        case
+          when measure_score == "COHORT" then "Cohort"
+          when measure_score == "CONTVAR" then "Continuous variable"
+          when measure_score == "PROPOR" then "Proportion"
+          when measure_score == "RATIO" then "Ratio"
+          else measure_score
+        end
       end
     end
   end
