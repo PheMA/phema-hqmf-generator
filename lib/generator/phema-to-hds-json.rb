@@ -121,7 +121,7 @@ module PhEMA
           end
 
           unless (attributes[:ordinal].nil?)
-            result["field_values"]["ORDINAL"] = {"code_list_id" => attributes[:ordinal][:code]}
+            result["field_values"]["ORDINAL"] = { "type" => "CD", "code_list_id" => attributes[:ordinal][:code]}
           end
         end
 

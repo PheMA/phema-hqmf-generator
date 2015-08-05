@@ -20,8 +20,10 @@ namespace :phema do
       "source_data_criteria" => {
         "SomeTestActiveDiagnosis" => PhEMA::HealthDataStandards::JsonTranslator.data_criteria(
           "http://rdf.healthit.gov/qdm/element#DiagnosisActive",
+          { :code => "2.16.840.1.113883.3.666.5.225", :title => "Any diagnosis of this type" },
           {
-            :severity => {:code => "2.16.840.1.113883.3.666.5.225", :title => "Any diagnosis of this type" }
+            :severity => {:code => "2.16.840.1.113883.3.666.5.226", :title => "List of severity codes" },
+            :ordinal => {:code => "2.16.840.1.113883.3.666.5.227" }
           },
           false, false, '')
       },
@@ -34,8 +36,10 @@ namespace :phema do
       "data_criteria" => {
         "SomeTestActiveDiagnosis" => PhEMA::HealthDataStandards::JsonTranslator.data_criteria(
           "http://rdf.healthit.gov/qdm/element#DiagnosisActive",
+          { :code => "2.16.840.1.113883.3.666.5.225", :title => "Any diagnosis of this type" },
           {
-            :severity => {:code => "2.16.840.1.113883.3.666.5.225", :title => "Any diagnosis of this type" }
+            :severity => {:code => "2.16.840.1.113883.3.666.5.226", :title => "List of severity codes" },
+            :ordinal => {:code => "2.16.840.1.113883.3.666.5.227" }
           },
           false, false, "SomeTestActiveDiagnosis")
       }
