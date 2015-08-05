@@ -17,12 +17,28 @@ namespace :phema do
       "hqmf_version_number" => "v1",  # This is the internal measure version, not a formal CMS version
       "population_criteria" => [],
       "data_criteria" => [],
-      "source_data_criteria" => [],
+      "source_data_criteria" => {
+        "SomeTestActiveDiagnosis" => PhEMA::HealthDataStandards::JsonTranslator.data_criteria(
+          "http://rdf.healthit.gov/qdm/element#DiagnosisActive",
+          {
+            :severity => {:code => "2.16.840.1.113883.3.666.5.225", :title => "Any diagnosis of this type" }
+          },
+          false, false, '')
+      },
       "attributes" => [
         PhEMA::HealthDataStandards::JsonTranslator.measure_score("COHORT"),
-        PhEMA::HealthDataStandards::JsonTranslator.attribute("REF", "Sample document")
+        PhEMA::HealthDataStandards::JsonTranslator.measure_type("OUTCOME"),
+        PhEMA::HealthDataStandards::JsonTranslator.text_attribute("REF", "Reference", "Sample document")
       ],
-      "measure_period" => PhEMA::HealthDataStandards::JsonTranslator.measure_period(nil, nil)
+      "measure_period" => PhEMA::HealthDataStandards::JsonTranslator.measure_period(nil, nil),
+      "data_criteria" => {
+        "SomeTestActiveDiagnosis" => PhEMA::HealthDataStandards::JsonTranslator.data_criteria(
+          "http://rdf.healthit.gov/qdm/element#DiagnosisActive",
+          {
+            :severity => {:code => "2.16.840.1.113883.3.666.5.225", :title => "Any diagnosis of this type" }
+          },
+          false, false, "SomeTestActiveDiagnosis")
+      }
     })
     puts HQMF2::Generator::ModelProcessor.to_hqmf(measure);
   end

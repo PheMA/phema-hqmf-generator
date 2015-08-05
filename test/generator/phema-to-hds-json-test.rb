@@ -15,6 +15,17 @@ class JsonTranslatorTest < MiniTest::Unit::TestCase
     assert_equal 'UNKNOWN', result["value_obj"]["title"]
   end
 
+  def test_measure_type
+    result = PhEMA::HealthDataStandards::JsonTranslator.measure_type("PROCESS")
+    assert_equal 'MSRTYPE', result["code_obj"]["code"]
+    assert_equal 'PROCESS', result["value_obj"]["code"]
+    assert_equal 'Process', result["value_obj"]["title"]
+
+    result = PhEMA::HealthDataStandards::JsonTranslator.measure_type("UNKNOWN")
+    assert_equal 'UNKNOWN', result["value_obj"]["code"]
+    assert_equal 'UNKNOWN', result["value_obj"]["title"]
+  end
+
   def test_measure_period
     result = PhEMA::HealthDataStandards::JsonTranslator.measure_period(nil, nil)
     assert_equal '19000101', result["low"]["value"]
@@ -55,5 +66,51 @@ class JsonTranslatorTest < MiniTest::Unit::TestCase
 
     result = PhEMA::HealthDataStandards::JsonTranslator.text_attribute('A', 'A', 'With some <html> tags & markup')
     assert_equal 'With some &lt;html&gt; tags &amp; markup', result["value_obj"]["value"]
+  end
+
+  def test_data_criteria
+    result = PhEMA::HealthDataStandards::JsonTranslator.data_criteria('test', nil, nil, false, false, nil)
+    assert_equal nil, result
+
+    result = PhEMA::HealthDataStandards::JsonTranslator.data_criteria(
+      "http://rdf.healthit.gov/qdm/element#DeviceAllergy",
+      { :code => "1.2.3", :title => "Value set test" },
+      { :severity => {:code => "2.3.4", :title => "Severity test" } },
+      false, false, "A" )
+    assert_equal '1.2.3', result["value"]["code_list_id"]
+    assert_equal 'device_allergy', result["definition"]
+    assert_equal 'Device, Allergy', result["description"]
+    assert_equal false, result["hard_status"]
+    assert_equal false, result["negation"]
+    assert_equal 'A', result["source_data_criteria"]
+    assert_equal '', result["status"]
+    assert_equal '', result["type"]
+    assert_equal false, result["variable"]
+    assert_equal 1, result["field_values"].length
+    assert_equal '2.3.4', result["field_values"]["SEVERITY"]["code_list_id"]
+
+    result = PhEMA::HealthDataStandards::JsonTranslator.data_criteria(
+      "http://rdf.healthit.gov/qdm/element#DeviceAllergy",
+      { :code => "1.2.3", :title => "Value set test" },
+      { :ordinal => {:code => "2.3.4" } },
+      false, false, "A" )
+    assert_equal 1, result["field_values"].length
+    assert_equal '2.3.4', result["field_values"]["ORDINAL"]["code_list_id"]
+
+    # Can handle when no attributes are specified
+    result = PhEMA::HealthDataStandards::JsonTranslator.data_criteria(
+      "http://rdf.healthit.gov/qdm/element#DeviceAllergy",
+      { :code => "1.2.3", :title => "Value set test" }, nil, false, false, "A" )
+    assert_equal 0, result["field_values"].length
+  end
+
+  def test_severity
+    result = PhEMA::HealthDataStandards::JsonTranslator.severity(nil, 'test title')
+    assert_equal nil, result
+
+    result = PhEMA::HealthDataStandards::JsonTranslator.severity('1.2.3', 'test title')
+    assert_equal 'CD', result['type']
+    assert_equal '1.2.3', result['code_list_id']
+    assert_equal 'test title', result['title']
   end
 end
