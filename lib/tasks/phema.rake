@@ -23,8 +23,10 @@ namespace :phema do
           { :code => "2.16.840.1.113883.3.666.5.225", :title => "Any diagnosis of this type" },
           {
             :severity => {:code => "2.16.840.1.113883.3.666.5.226", :title => "List of severity codes" },
-            :ordinal => {:code => "2.16.840.1.113883.3.666.5.227" }
+            :ordinal => {:code => "2.16.840.1.113883.3.666.5.227" },
+            :anatomical_location => {:code => "1.2.3"}
           },
+          { "low" => { "value" => "20150101" }, "high" => { "value" => "20151231" } },
           false, false, '')
       },
       "attributes" => [
@@ -39,8 +41,10 @@ namespace :phema do
           { :code => "2.16.840.1.113883.3.666.5.225", :title => "Any diagnosis of this type" },
           {
             :severity => {:code => "2.16.840.1.113883.3.666.5.226", :title => "List of severity codes" },
-            :ordinal => {:code => "2.16.840.1.113883.3.666.5.227" }
+            :ordinal => {:code => "2.16.840.1.113883.3.666.5.227" },
+            :anatomical_location => {:code => "1.2.3"}
           },
+          nil,
           false, false, "SomeTestActiveDiagnosis")
       }
     })

@@ -90,7 +90,7 @@ module PhEMA
         }
       end
 
-      def self.data_criteria(qdmType, valueSet, attributes, isNegated, isVariable, sourceId)
+      def self.data_criteria(qdmType, valueSet, attributes, effectiveTime, isNegated, isVariable, sourceId)
         hqmf = QDM_HQMF_MAPPING.detect { |x| x[:id] == qdmType }
         unless (hqmf)
           return nil
@@ -112,7 +112,8 @@ module PhEMA
           #"title" => hqmf[:description],
           "type" => hqmf[:type],
           "variable" => isVariable,
-          "field_values" => {}
+          "field_values" => {},
+          "effective_time" => effectiveTime
         }
 
         unless(attributes.nil?)
@@ -122,6 +123,14 @@ module PhEMA
 
           unless (attributes[:ordinal].nil?)
             result["field_values"]["ORDINAL"] = { "type" => "CD", "code_list_id" => attributes[:ordinal][:code]}
+          end
+
+          unless (attributes[:anatomical_location].nil?)
+            result["field_values"]["ANATOMICAL_LOCATION"] = { "type" => "CD", "code_list_id" => attributes[:anatomical_location][:code]}
+          end
+
+          unless (attributes[:method].nil?)
+            result["field_values"]["METHOD"] = { "type" => "CD", "code_list_id" => attributes[:method][:code]}
           end
         end
 
