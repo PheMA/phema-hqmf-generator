@@ -18,16 +18,24 @@ namespace :phema do
       "population_criteria" => [],
       "data_criteria" => [],
       "source_data_criteria" => {
-        "SomeTestActiveDiagnosis" => PhEMA::HealthDataStandards::JsonTranslator.data_criteria(
-          "http://rdf.healthit.gov/qdm/element#DiagnosisActive",
-          { :code => "2.16.840.1.113883.3.666.5.225", :title => "Any diagnosis of this type" },
-          {
-            :severity => {:code => "2.16.840.1.113883.3.666.5.226", :title => "List of severity codes" },
-            :ordinal => {:code => "2.16.840.1.113883.3.666.5.227" },
-            :anatomical_location => {:code => "1.2.3"}
-          },
+        "SomeTestActiveMedication" => PhEMA::HealthDataStandards::JsonTranslator.data_criteria(
+          # "http://rdf.healthit.gov/qdm/element#DiagnosisActive",
+          # { :code => "2.16.840.1.113883.3.666.5.225", :title => "Any diagnosis of this type" },
+          # {
+          #   :severity => {:code => "2.16.840.1.113883.3.666.5.226", :title => "List of severity codes" },
+          #   :ordinal => {:code => "2.16.840.1.113883.3.666.5.227" },
+          #   :anatomical_location => {:code => "1.2.3"},
+          #   :method => {:code => "2.3.4" },
+          #   :facility_location => {:code => "3.4.5" }
+          # },
+          # { "low" => { "value" => "20150101" }, "high" => { "value" => "20151231" } },
+          # false, false, ''
+          "http://rdf.healthit.gov/qdm/element#MedicationActive",
+          { :code => "2.16.840.1.113883.3.666.5.225", :title => "Any medication of this type" },
+          nil,
           { "low" => { "value" => "20150101" }, "high" => { "value" => "20151231" } },
-          false, false, '')
+          false, false, ''
+          )
       },
       "attributes" => [
         PhEMA::HealthDataStandards::JsonTranslator.measure_score("COHORT"),
@@ -42,7 +50,9 @@ namespace :phema do
           {
             :severity => {:code => "2.16.840.1.113883.3.666.5.226", :title => "List of severity codes" },
             :ordinal => {:code => "2.16.840.1.113883.3.666.5.227" },
-            :anatomical_location => {:code => "1.2.3"}
+            :anatomical_location => {:code => "1.2.3"},
+            :method => {:code => "2.3.4" },
+            :facility_location => {:code => "3.4.5" }
           },
           nil,
           false, false, "SomeTestActiveDiagnosis")

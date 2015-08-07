@@ -103,6 +103,7 @@ module PhEMA
             "title" => valueSet[:title],
           },
           "inline_code_list" => hqmf[:code],
+          "code_list_id" => valueSet[:code],
           "definition" => hqmf[:definition],
           "description" => hqmf[:description],
           "hard_status" => false,
@@ -117,20 +118,8 @@ module PhEMA
         }
 
         unless(attributes.nil?)
-          unless (attributes[:severity].nil?)
-            result["field_values"]["SEVERITY"] = severity(attributes[:severity][:code], attributes[:severity][:title])
-          end
-
-          unless (attributes[:ordinal].nil?)
-            result["field_values"]["ORDINAL"] = { "type" => "CD", "code_list_id" => attributes[:ordinal][:code]}
-          end
-
-          unless (attributes[:anatomical_location].nil?)
-            result["field_values"]["ANATOMICAL_LOCATION"] = { "type" => "CD", "code_list_id" => attributes[:anatomical_location][:code]}
-          end
-
-          unless (attributes[:method].nil?)
-            result["field_values"]["METHOD"] = { "type" => "CD", "code_list_id" => attributes[:method][:code]}
+          attributes.each_pair do |key, value|
+            result["field_values"][key.to_s.upcase] = { "type" => "CD", "code_list_id" => value[:code], "title" => value[:title]}
           end
         end
 
