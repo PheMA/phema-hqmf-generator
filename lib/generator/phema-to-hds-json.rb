@@ -1,7 +1,11 @@
 module PhEMA
   module HealthDataStandards
     class JsonTranslator
-      def self.measure_score(measure_score)
+      def initialize
+        @data_element_counter = 1
+      end
+
+      def measure_score(measure_score)
         {
           "name" => "Measure scoring",
           "code" => "MSRSCORE",
@@ -20,7 +24,7 @@ module PhEMA
         }
       end
 
-      def self.measure_type(measure_type)
+      def measure_type(measure_type)
         {
           "name" => "Measure Type",
           "code" => "MSRTYPE",
@@ -39,7 +43,7 @@ module PhEMA
         }
       end
 
-      def self.measure_period(start_date, end_date)
+      def measure_period(start_date, end_date)
         {
           "low" => {
             "value" => start_date.nil? ? "19000101" : start_date
@@ -50,19 +54,19 @@ module PhEMA
         }
       end
 
-      def self.reference(text)
+      def reference(text)
         text_attribute("REF", "Reference", text)
       end
 
-      def self.definition(text)
+      def definition(text)
         text_attribute("DEF", "Definition", text)
       end
 
-      def self.initial_population(text)
+      def initial_population(text)
         text_attribute("IPOP", "Initial Population", text)
       end
 
-      def self.text_attribute(code, name, value)
+      def text_attribute(code, name, value)
         {
           "name" => name,
           "code" => code,
@@ -78,7 +82,7 @@ module PhEMA
         }
       end
 
-      def self.severity(valueSetId, title)
+      def severity(valueSetId, title)
         if (valueSetId.nil?)
           return nil
         end
@@ -90,7 +94,7 @@ module PhEMA
         }
       end
 
-      def self.data_criteria(qdmType, valueSet, attributes, effectiveTime, isNegated, isVariable, sourceId)
+      def data_criteria(qdmType, valueSet, attributes, effectiveTime, isNegated, isVariable, sourceId)
         hqmf = QDM_HQMF_MAPPING.detect { |x| x[:id] == qdmType }
         unless (hqmf)
           return nil
@@ -126,9 +130,15 @@ module PhEMA
         result
       end
 
+      def generate_entity_name(type, valueSet)
+        name = (type + '_' + valueSet).gsub(/[\s,]{2,}/, ' ').gsub(/[\s]/, '_') + '_' + @data_element_counter.to_s
+        @data_element_counter = @data_element_counter + 1
+        name
+      end
+
       private
 
-      def self.get_measure_score_title(measure_score)
+      def get_measure_score_title(measure_score)
         case
           when measure_score == "COHORT" then "Cohort"
           when measure_score == "CONTVAR" then "Continuous variable"
@@ -138,7 +148,7 @@ module PhEMA
         end
       end
 
-      def self.get_measure_type_title(measure_type)
+      def get_measure_type_title(measure_type)
         case
           when measure_type == "OUTCOME" then "Outcome"
           when measure_type == "PROCESS" then "Process"
