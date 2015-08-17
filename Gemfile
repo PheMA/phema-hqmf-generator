@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem 'health-data-standards'
+gem 'health-data-standards', path: '../health-data-standards'
 
 group :development do
   gem 'rake'
