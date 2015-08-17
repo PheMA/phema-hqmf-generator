@@ -114,7 +114,6 @@ module PhEMA
           "negation" => isNegated,
           "source_data_criteria" => sourceId,
           "status" => hqmf[:status],
-          #"title" => hqmf[:description],
           "type" => hqmf[:type],
           "variable" => isVariable,
           "field_values" => {},
@@ -130,8 +129,13 @@ module PhEMA
         result
       end
 
-      def generate_entity_name(type, valueSet)
-        name = (type + '_' + valueSet).gsub(/[\s,]{2,}/, ' ').gsub(/[\s]/, '_') + '_' + @data_element_counter.to_s
+      def generate_entity_name(qdmType, valueSet)
+        hqmf = QDM_HQMF_MAPPING.detect { |x| x[:id] == qdmType }
+        unless (hqmf)
+          return nil
+        end
+
+        name = (hqmf[:description] + '_' + valueSet).gsub(/[\s,]{2,}/, ' ').gsub(/[\s]/, '_') + '_' + @data_element_counter.to_s
         @data_element_counter = @data_element_counter + 1
         name
       end

@@ -116,9 +116,11 @@ class JsonTranslatorTest < MiniTest::Unit::TestCase
   end
 
   def test_generate_entity_name
-    result = @translator.generate_entity_name('Diagnosis, Active', 'Diabetes Grouping Value Set')
+    result = @translator.generate_entity_name('http://rdf.healthit.gov/qdm/element#DiagnosisActive', 'Diabetes Grouping Value Set')
     assert_equal 'Diagnosis_Active_Diabetes_Grouping_Value_Set_1', result
-    result = @translator.generate_entity_name('Diagnosis, Active', 'Diabetes Grouping Value Set')
+    result = @translator.generate_entity_name('http://rdf.healthit.gov/qdm/element#DiagnosisActive', 'Diabetes Grouping Value Set')
     assert_equal 'Diagnosis_Active_Diabetes_Grouping_Value_Set_2', result
+    result = @translator.generate_entity_name('http://rdf.healthit.gov/qdm/element#Unknown', 'Diabetes Grouping Value Set')
+    assert_equal nil, result
   end
 end
