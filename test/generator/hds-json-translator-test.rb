@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class JsonTranslatorTest < MiniTest::Unit::TestCase
+class HdsJsonTranslatorTest < Minitest::Test
   def setup
     @translator = PhEMA::HealthDataStandards::JsonTranslator.new
   end

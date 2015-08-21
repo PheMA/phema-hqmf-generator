@@ -97,5 +97,11 @@ module PhEMA
       { :id => "http://rdf.healthit.gov/qdm/element#TransferFrom", :name => "TransferFrom", :description => "Transfer From", :type => "", :definition => "transfer_from", :status => "" },
       { :id => "http://rdf.healthit.gov/qdm/element#TransferTo", :name => "TransferTo", :description => "Transfer To", :type => "", :definition => "transfer_to", :status => "" },
     ]
+
+    QDM_HQMF_LOGICAL_CONJUNCTION_MAPPING = {
+      "http://rdf.healthit.gov/qdm/element#And" => "allTrue",
+      "http://rdf.healthit.gov/qdm/element#Or" => "atLeastOneTrue",
+      "http://rdf.healthit.gov/qdm/element#Not" => "allFalse"
+    }
   end
 end
