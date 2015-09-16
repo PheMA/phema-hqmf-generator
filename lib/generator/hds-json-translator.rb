@@ -129,14 +129,21 @@ module PhEMA
         result
       end
 
-      def generate_entity_name(qdmType, valueSet)
+      # Generates a unique name for an entity
+      # @param qdmType [String] The URI for the QDM element type
+      # @param valueSet [String] A name/descriptor for the value set associated with the element
+      # @param id [String] An optional unique identifier from the source system.  If no identifier is available, and internal ID will be assigned.
+      # @return [String] The generated name for the entity, ready for use in the HDS structure.
+      def generate_entity_name(qdmType, valueSet, id = nil)
         hqmf = QDM_HQMF_MAPPING.detect { |x| x[:id] == qdmType }
         unless (hqmf)
           return nil
         end
 
-        name = (hqmf[:description] + '_' + valueSet).gsub(/[\s,]{2,}/, ' ').gsub(/[\s]/, '_') + '_' + @data_element_counter.to_s
-        @data_element_counter = @data_element_counter + 1
+        id ||= @data_element_counter
+
+        name = (hqmf[:description] + '_' + valueSet).gsub(/[\s,]{2,}/, ' ').gsub(/[\s]/, '_') + '_' + id.to_s
+        @data_element_counter = @data_element_counter + 1  # Increment, even if it's never used
         name
       end
 
