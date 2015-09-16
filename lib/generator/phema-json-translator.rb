@@ -15,8 +15,7 @@ module PhEMA
         phenotype = JSON.parse(json_string)
         return if phenotype.nil?
         build_id_element_map(phenotype)
-        phema_logical_operators = find_logical_operators(phenotype)
-        hqmf_logical_operators = build_logical_operators(phema_logical_operators)
+        hds_logical_operators = build_logical_operators(phenotype)
 
         # Need to build into authoring tool, including title & other metadata in the JSON that we
         # get sent.
@@ -37,7 +36,7 @@ module PhEMA
           "population_criteria" => {
             "IPP" => { "type" => "IPP", "title" => "Initial Patient Population",
               "conjunction_code" => "allTrue",
-              "preconditions" => hqmf_logical_operators
+              "preconditions" => hds_logical_operators
             }
           }
         })
@@ -80,7 +79,9 @@ module PhEMA
       end
 
       # TODO: recursively build nested operators
-      def build_logical_operators operators
+      def build_logical_operators element
+        operators = find_logical_operators(element)
+
         # Get the identifiers of elements that are in this logical operator
         hqmf_operators = []
         operators.each do |operator|
@@ -93,7 +94,19 @@ module PhEMA
 
           # Build the HDS structures for this operator
           hqmf_type = PhEMA::HealthDataStandards::QDM_HQMF_LOGICAL_CONJUNCTION_MAPPING[operator["attrs"]["element"]["uri"]]
-          hqmf_operators << { "conjunction_code" => hqmf_type, "preconditions" => elements.map {|el| { "id" => el["id"], "reference" => el["hds_name"] } } }
+          operator_definition = {
+            "conjunction_code" => hqmf_type,
+            "preconditions" => elements.map do |el|
+              item = { "id" => el["id"] }
+              if el["hds_name"]
+                item["reference"] = el["hds_name"]
+              else
+                item["preconditions"] = build_logical_operators(operator)
+              end
+              item
+            end
+          }
+          hqmf_operators << operator_definition
         end
 
         hqmf_operators
