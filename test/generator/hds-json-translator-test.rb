@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class JsonTranslatorTest < MiniTest::Unit::TestCase
+class HdsJsonTranslatorTest < Minitest::Test
   def setup
     @translator = PhEMA::HealthDataStandards::JsonTranslator.new
   end
@@ -120,6 +120,10 @@ class JsonTranslatorTest < MiniTest::Unit::TestCase
     assert_equal 'Diagnosis_Active_Diabetes_Grouping_Value_Set_1', result
     result = @translator.generate_entity_name('http://rdf.healthit.gov/qdm/element#DiagnosisActive', 'Diabetes Grouping Value Set')
     assert_equal 'Diagnosis_Active_Diabetes_Grouping_Value_Set_2', result
+    result = @translator.generate_entity_name('http://rdf.healthit.gov/qdm/element#DiagnosisActive', 'Diabetes Grouping Value Set', 'A')
+    assert_equal 'Diagnosis_Active_Diabetes_Grouping_Value_Set_A', result
+    result = @translator.generate_entity_name('http://rdf.healthit.gov/qdm/element#DiagnosisActive', 'Diabetes Grouping Value Set')
+    assert_equal 'Diagnosis_Active_Diabetes_Grouping_Value_Set_4', result
     result = @translator.generate_entity_name('http://rdf.healthit.gov/qdm/element#Unknown', 'Diabetes Grouping Value Set')
     assert_equal nil, result
   end
