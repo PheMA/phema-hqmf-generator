@@ -16,6 +16,7 @@ module PhEMA
         return if phenotype.nil?
         build_id_element_map(phenotype)
         hds_logical_operators = build_logical_operators(phenotype)
+        data_criteria = build_data_criteria
 
         # Need to build into authoring tool, including title & other metadata in the JSON that we
         # get sent.
@@ -24,9 +25,8 @@ module PhEMA
           "description" => "This is a test measure",
           "hqmf_version_number" => "v1",  # This is the internal measure version, not a formal CMS version
           "population_criteria" => [],
-          "source_data_criteria" => {
-          },
-          "data_criteria" => build_data_criteria,
+          "source_data_criteria" => data_criteria,
+          "data_criteria" => data_criteria,
           "attributes" => [
             @hds_translator.measure_score("COHORT"),
             @hds_translator.measure_type("OUTCOME"),
@@ -40,8 +40,16 @@ module PhEMA
             }
           }
         })
-        measure.to_json
-        #HQMF2::Generator::ModelProcessor.to_hqmf(measure);
+
+        measure
+      end
+
+      def to_hqmf json_string
+        HQMF2::Generator::ModelProcessor.to_hqmf(to_hds(json_string));
+      end
+
+      def to_hds_json json_string
+        to_hds(json_string).to_json.to_json
       end
 
       def build_data_criteria
@@ -78,7 +86,6 @@ module PhEMA
         )
       end
 
-      # TODO: recursively build nested operators
       def build_logical_operators element
         operators = find_logical_operators(element)
 

@@ -7,14 +7,21 @@ require_relative "../phema-hqmf-generator"
 
 namespace :phema do
 
-  desc 'Parse all xml files to JSON and save them to ./tmp'
-  task :generate, [:path] do |t, args|
-    raise "You must specify the JSON file path to convert" unless args.path
+  desc 'Convert a PhEMA JSON file to another format'
+  task :generate, [:path,:format] do |t, args|
+    raise "You must specify the JSON file to convert" unless args.path
+    raise "Please specify the output format (hds or hqmf)" unless args.format
 
     contents = File.open(args.path).read
 
     translator = PhEMA::Phenotype::JsonTranslator.new
-    puts translator.to_hds(contents)
+    if args.format == 'hds'
+      puts translator.to_hds_json(contents)
+    elsif args.format == 'hqmf'
+      puts translator.to_hqmf(contents)
+    end
+  end
+end
 
     # translator = PhEMA::HealthDataStandards::JsonTranslator.new
 
@@ -75,5 +82,3 @@ namespace :phema do
     #   }
     # })
     # puts HQMF2::Generator::ModelProcessor.to_hqmf(measure);
-  end
-end
