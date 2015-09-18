@@ -16,7 +16,8 @@ module PhEMA
         return if phenotype.nil?
         build_id_element_map(phenotype)
         hds_logical_operators = build_logical_operators(phenotype)
-        data_criteria = build_data_criteria
+        data_criteria = build_data_criteria(false)
+        source_data_criteria = build_data_criteria(true)
 
         # Need to build into authoring tool, including title & other metadata in the JSON that we
         # get sent.
@@ -25,7 +26,7 @@ module PhEMA
           "description" => "This is a test measure",
           "hqmf_version_number" => "v1",  # This is the internal measure version, not a formal CMS version
           "population_criteria" => [],
-          "source_data_criteria" => data_criteria,
+          "source_data_criteria" => source_data_criteria,
           "data_criteria" => data_criteria,
           "attributes" => [
             @hds_translator.measure_score("COHORT"),
@@ -52,11 +53,11 @@ module PhEMA
         to_hds(json_string).to_json.to_json
       end
 
-      def build_data_criteria
+      def build_data_criteria isSource
         return {} if @id_element_map.empty?
 
         formatted_items = @id_element_map.map do |key, val|
-          [ val["hds_name"], phema_data_type_to_hds_json(val) ] unless val["hds_name"].nil?
+          [ val["hds_name"], phema_data_type_to_hds_json(val, isSource) ] unless val["hds_name"].nil?
         end
 
         Hash[formatted_items.compact]
@@ -74,7 +75,7 @@ module PhEMA
       # Builds up the HDS definition of a data element, given a PhEMA definition
       # @param element [Hash] The PhEMA element that will be converted
       # @return [Hash] The HDS JSON that defines a data element
-      def phema_data_type_to_hds_json element
+      def phema_data_type_to_hds_json element, isSource
         value_set = get_value_set_for_element element
 
         @hds_translator.data_criteria(
@@ -82,33 +83,34 @@ module PhEMA
           {
             :code => value_set["id"],
             :title => value_set["name"]
-          }, nil, nil, false, false, ''
+          }, nil, nil, false, false, (isSource ? '' : element["hds_name"])
         )
       end
 
       def build_logical_operators element
         operators = find_logical_operators(element)
 
-        # Get the identifiers of elements that are in this logical operator
         hqmf_operators = []
         operators.each do |operator|
+          # Get the identifiers of elements that are in this logical operator
           element_ids = operator["attrs"]["phemaObject"]["containedElements"].map{ |el| el["id"] }
 
           # Search the overall elements by these IDs
-          elements = []
-          element_ids.each { |id| elements << @id_element_map[id] }
-          elements.compact!
+          contained_elements = []
+          element_ids.each { |id| contained_elements << @id_element_map[id] }
+          contained_elements.compact!
 
           # Build the HDS structures for this operator
           hqmf_type = PhEMA::HealthDataStandards::QDM_HQMF_LOGICAL_CONJUNCTION_MAPPING[operator["attrs"]["element"]["uri"]]
           operator_definition = {
+            "id" => operator["id"],
             "conjunction_code" => hqmf_type,
-            "preconditions" => elements.map do |el|
+            "preconditions" => contained_elements.map do |el|
               item = { "id" => el["id"] }
               if el["hds_name"]
                 item["reference"] = el["hds_name"]
               else
-                item["preconditions"] = build_logical_operators(operator)
+                item = build_logical_operators(operator).first
               end
               item
             end

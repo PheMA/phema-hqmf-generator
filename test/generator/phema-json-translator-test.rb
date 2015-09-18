@@ -51,7 +51,7 @@ class PhenotypeJsonTranslatorTest < Minitest::Test
     @translator.build_id_element_map(nested_logical_phenotype)
     logical_operators = @translator.build_logical_operators(nested_logical_phenotype)
     assert_equal 1, logical_operators.length
-    assert_equal 2, logical_operators[0]["preconditions"][0]["preconditions"][0]["preconditions"].length
+    assert_equal 2, logical_operators[0]["preconditions"][0]["preconditions"].length
   end
 
   def test_build_logical_operators_elements_not_found
