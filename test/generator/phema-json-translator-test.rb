@@ -61,4 +61,13 @@ class PhenotypeJsonTranslatorTest < Minitest::Test
     @translator.build_id_element_map(phenotype)
     assert_equal 1, @translator.build_logical_operators(@phenotype).length
   end
+
+  def test_build_attributes_for_element
+    element_without_attrs = JSON.parse('{"attrs":{"id":"mainLayer"},"id":3,"className":"Layer","children":[{"attrs":{"phemaObject":{"valueSet":{"id":13},"className":"DataElement"},"draggable":true,"x":50,"y":50,"width":195,"height":73,"element":{"id":"DiagnosisActive","name":"Diagnosis, Active","uri":"http://rdf.healthit.gov/qdm/element#DiagnosisActive","type":"DataElement"}},"id":6,"className":"PhemaGroup","children":[{"attrs":{"phemaObject":{"className":"ValueSet"},"element":{"id":"2.16.840.1.113883.3.600.1.1523","name":"Above Normal f/u icd 10","uri":"urn:oid:2.16.840.1.113883.3.600.1.1523/version/20140501","type":"ValueSet","loadDetailStatus":"success"}},"id":13,"className":"PhemaGroup","children":[{"attrs":{"width":175,"height":34,"fill":"#eedbf4","name":"mainRect","stroke":"black","strokeWidth":1},"id":14,"className":"Rect"}]}]}]}')
+    assert_equal nil, @translator.build_attributes_for_element(element_without_attrs)
+
+    element_with_attrs = JSON.parse('{"attrs":{"phemaObject":{"valueSet":{"id":13},"attributes":{"PatientPreference":[],"Ordinality":[{"id":"2.16.840.1.113883.3.464.1003.101.11.1040","name":"Outpatient Consultation","uri":"urn:oid:2.16.840.1.113883.3.464.1003.101.11.1040/version/20140501","type":"ValueSet","loadDetailStatus":"success"}],"ProviderPreference":[],"NegationRationale":[],"Severity":[],"AnatomicalLocationSite":[],"HealthRecordField":[],"Source":[],"Recorder":[],"Result":{"valueSet":[],"type":"present"},"Dose":{"valueSet":[],"type":"present"}},"className":"DataElement"},"draggable":true,"x":50,"y":50,"width":195,"height":73,"element":{"id":"DiagnosisActive","name":"Diagnosis, Active","uri":"http://rdf.healthit.gov/qdm/element#DiagnosisActive","type":"DataElement"}},"id":6,"className":"PhemaGroup","children":[{"attrs":{"phemaObject":{"className":"ValueSet"},"element":{"id":"2.16.840.1.113883.3.600.1.1523","name":"Above Normal f/u icd 10","uri":"urn:oid:2.16.840.1.113883.3.600.1.1523/version/20140501","type":"ValueSet","loadDetailStatus":"success"}},"id":13,"className":"PhemaGroup","children":[{"attrs":{"width":175,"height":34,"fill":"#eedbf4","name":"mainRect","stroke":"black","strokeWidth":1},"id":14,"className":"Rect"}]}]}')
+    attributes = @translator.build_attributes_for_element(element_with_attrs)
+    assert_equal 3, attributes.length  #All that comes out are attributes with defined values
+  end
 end
