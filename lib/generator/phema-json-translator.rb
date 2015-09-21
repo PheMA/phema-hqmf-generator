@@ -106,13 +106,24 @@ module PhEMA
                 attr_hash[attribute_symbol] = {:type => "ANYNonNull" }
               elsif value["type"] == "value"
                 if value["operator"] == "BW"
-                  attr_hash[attribute_symbol] = {
-                    :type => "IVL_PQ",
-                    :low => { "value" => value["valueLow"], "unit" => value["units"]["id"] },
-                    :high => { "value" => value["valueHigh"], "unit" => value["units"]["id"] }
-                  }
+                  attr_hash[attribute_symbol] = { :type => "IVL_PQ" }
+                  attr_hash[attribute_symbol][:low] = { "value" => value["valueLow"], "unit" => value["units"]["id"] }
+                  attr_hash[attribute_symbol][:high] = { "value" => value["valueHigh"], "unit" => value["units"]["id"] }
+                elsif value["operator"] == "EQ"
+                  attr_hash[attribute_symbol] = { :type => "IVL_PQ" }
+                  attr_hash[attribute_symbol][:low] = { "type" => "PQ", "value" => value["valueLow"], "unit" => value["units"]["id"] }
+                  attr_hash[attribute_symbol][:high] = { "type" => "PQ", "value" => value["valueLow"], "unit" => value["units"]["id"] }
                 else
-                  attr_hash[attribute_symbol] = {:type => "PQ" }
+                  attr_hash[attribute_symbol] = { :type => "IVL_PQ" }
+                  if value["operator"][0] == 'L'
+                    attr_hash[attribute_symbol][:high] = { "type" => "PQ", "value" => value["valueLow"], "unit" => value["units"]["id"] }
+                    attr_hash[attribute_symbol][:high]["inclusive?"] = true if value["operator"] == 'LE'
+                    attr_hash[attribute_symbol][:low] = { "null_flavor" => "NINF", "inclusive?" => false }
+                  else  # Greater than (or equal to)
+                    attr_hash[attribute_symbol][:low] = { "type" => "PQ", "value" => value["valueLow"], "unit" => value["units"]["id"] }
+                    attr_hash[attribute_symbol][:low]["inclusive?"] = true if value["operator"] == 'GE'
+                    attr_hash[attribute_symbol][:high] = { "null_flavor" => "PINF", "inclusive?" => false }
+                  end
                 end
               end
             end
