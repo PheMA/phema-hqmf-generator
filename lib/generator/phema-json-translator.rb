@@ -83,8 +83,53 @@ module PhEMA
           {
             :code => value_set["id"],
             :title => value_set["name"]
-          }, nil, nil, false, false, (isSource ? '' : element["hds_name"])
+          },
+          build_attributes_for_element(element),  # Attributes
+          nil,  # Date range
+          false, false, (isSource ? '' : element["hds_name"])
         )
+      end
+
+      def build_attributes_for_element element
+        return nil unless element["attrs"] and element["attrs"]["phemaObject"] and element["attrs"]["phemaObject"]["attributes"]
+        attr_hash = Hash.new
+        attributes = element["attrs"]["phemaObject"]["attributes"]
+        attributes.each do |key, value|
+          if value
+            attribute_symbol = key.underscore.to_sym
+            if value.is_a?(Array)
+              if value.length > 0
+                attr_hash[attribute_symbol] = {:type => "CD", :code => value[0]["id"], :title => value[0]["name"]} if value[0]["type"] == "ValueSet"
+              end
+            elsif value["type"]
+              if value["type"] == "present"
+                attr_hash[attribute_symbol] = {:type => "ANYNonNull" }
+              elsif value["type"] == "value"
+                if value["operator"] == "BW"
+                  attr_hash[attribute_symbol] = { :type => "IVL_PQ" }
+                  attr_hash[attribute_symbol][:low] = { "value" => value["valueLow"], "unit" => value["units"]["id"] }
+                  attr_hash[attribute_symbol][:high] = { "value" => value["valueHigh"], "unit" => value["units"]["id"] }
+                elsif value["operator"] == "EQ"
+                  attr_hash[attribute_symbol] = { :type => "IVL_PQ" }
+                  attr_hash[attribute_symbol][:low] = { "type" => "PQ", "value" => value["valueLow"], "unit" => value["units"]["id"] }
+                  attr_hash[attribute_symbol][:high] = { "type" => "PQ", "value" => value["valueLow"], "unit" => value["units"]["id"] }
+                else
+                  attr_hash[attribute_symbol] = { :type => "IVL_PQ" }
+                  if value["operator"][0] == 'L'
+                    attr_hash[attribute_symbol][:high] = { "type" => "PQ", "value" => value["valueLow"], "unit" => value["units"]["id"] }
+                    attr_hash[attribute_symbol][:high]["inclusive?"] = true if value["operator"] == 'LE'
+                    attr_hash[attribute_symbol][:low] = { "null_flavor" => "NINF", "inclusive?" => false }
+                  else  # Greater than (or equal to)
+                    attr_hash[attribute_symbol][:low] = { "type" => "PQ", "value" => value["valueLow"], "unit" => value["units"]["id"] }
+                    attr_hash[attribute_symbol][:low]["inclusive?"] = true if value["operator"] == 'GE'
+                    attr_hash[attribute_symbol][:high] = { "null_flavor" => "PINF", "inclusive?" => false }
+                  end
+                end
+              end
+            end
+          end
+        end
+        attr_hash
       end
 
       def build_logical_operators element

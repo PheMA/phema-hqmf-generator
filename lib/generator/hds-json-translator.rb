@@ -122,7 +122,15 @@ module PhEMA
 
         unless(attributes.nil?)
           attributes.each_pair do |key, value|
-            result["field_values"][key.to_s.upcase] = { "type" => "CD", "code_list_id" => value[:code], "title" => value[:title]}
+            value_hash = { "type" => value[:type] }
+            if value[:type] == "IVL_PQ" or value[:type] == "PQ"
+              value_hash["low"] = value[:low] if value[:low]
+              value_hash["high"] = value[:high] if value[:high]
+            elsif value[:type] != HQMF::AnyValue
+              value_hash["code_list_id"] = value[:code]
+              value_hash["title"] = value[:title]
+            end
+            result["field_values"][key.to_s.upcase] = value_hash
           end
         end
 
