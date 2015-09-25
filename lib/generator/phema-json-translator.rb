@@ -84,12 +84,52 @@ module PhEMA
             :code => value_set["id"],
             :title => value_set["name"]
           },
-          build_attributes_for_element(element),  # Attributes
+          build_attributes_for_element(element),
           nil,  # Date range
-          false, false, (isSource ? '' : element["hds_name"])
+          false, # Negated?
+          false, # Is a variable?
+          (isSource ? '' : element["hds_name"]),
+          build_temporal_references_for_element(element)
         )
       end
 
+      # Build the array of temporal references that exist (if any) for an element.  Although temporal relationships
+      # are bi-directional, the HQMF specification only wants to see the source -> target pair.
+      # @param element [Hash] The PhEMA element we are interested in
+      # @return [Array] The list of temporal relationships (Hash objects) where this element is the source.
+      def build_temporal_references_for_element element
+        # Get all of the connector items associated with this element.
+        connectors = element["children"].find_all { |ch| ch["className"] == "PhemaConnector" }
+        return nil unless connectors and connectors.length > 0
+        # For each connector, look up the actual connection relationship that is associated with it.  There may be
+        # multiple for a connector.
+        connections = connectors.map { |connector| connector["attrs"]["connections"].map { |con| @id_element_map[con["id"]] } }.flatten!
+        return nil unless connections and connections.length > 0
+
+        temporal_references = []
+        connections.each do |connection|
+          start_id = connection["attrs"]["connectors"]["start"]["id"]
+          # Am I the start or the end?  If I'm the end, skip because whoever the start element is will define the relationship
+          matching_connector = element["children"].find { |ch| ch["id"] == start_id}
+          if matching_connector
+            end_element = @id_element_map.find { |key, val| val["children"].any?{ |ch| ch["id"] == connection["attrs"]["connectors"]["end"]["id"] } if val["children"] }
+            unless end_element.nil?
+              reference = { "reference" => end_element[1]["hds_name"], "type" => PhEMA::HealthDataStandards::QDM_HQMF_TEMPORAL_TYPE_MAPPING[connection["attrs"]["element"]["uri"]] }
+              if connection["attrs"]["element"]["timeRange"] and connection["attrs"]["element"]["timeRange"]["comparison"]
+                time_range = connection["attrs"]["element"]["timeRange"]
+                reference["range"] = build_range_hash(true, time_range["comparison"], time_range["start"]["units"], time_range["start"]["value"], time_range["end"]["value"])
+              end
+              temporal_references << reference
+            end
+          end
+        end
+
+        temporal_references
+      end
+
+      # Build the attributes that have been defined for a specific QDM element
+      # @param element [Hash] The PhEMA element we are interested in
+      # @return [Hash] The HDS JSON that defines the attributes for the element
       def build_attributes_for_element element
         return nil unless element["attrs"] and element["attrs"]["phemaObject"] and element["attrs"]["phemaObject"]["attributes"]
         attr_hash = Hash.new
@@ -105,31 +145,37 @@ module PhEMA
               if value["type"] == "present"
                 attr_hash[attribute_symbol] = {:type => "ANYNonNull" }
               elsif value["type"] == "value"
-                if value["operator"] == "BW"
-                  attr_hash[attribute_symbol] = { :type => "IVL_PQ" }
-                  attr_hash[attribute_symbol][:low] = { "value" => value["valueLow"], "unit" => value["units"]["id"] }
-                  attr_hash[attribute_symbol][:high] = { "value" => value["valueHigh"], "unit" => value["units"]["id"] }
-                elsif value["operator"] == "EQ"
-                  attr_hash[attribute_symbol] = { :type => "IVL_PQ" }
-                  attr_hash[attribute_symbol][:low] = { "type" => "PQ", "value" => value["valueLow"], "unit" => value["units"]["id"] }
-                  attr_hash[attribute_symbol][:high] = { "type" => "PQ", "value" => value["valueLow"], "unit" => value["units"]["id"] }
-                else
-                  attr_hash[attribute_symbol] = { :type => "IVL_PQ" }
-                  if value["operator"][0] == 'L'
-                    attr_hash[attribute_symbol][:high] = { "type" => "PQ", "value" => value["valueLow"], "unit" => value["units"]["id"] }
-                    attr_hash[attribute_symbol][:high]["inclusive?"] = true if value["operator"] == 'LE'
-                    attr_hash[attribute_symbol][:low] = { "null_flavor" => "NINF", "inclusive?" => false }
-                  else  # Greater than (or equal to)
-                    attr_hash[attribute_symbol][:low] = { "type" => "PQ", "value" => value["valueLow"], "unit" => value["units"]["id"] }
-                    attr_hash[attribute_symbol][:low]["inclusive?"] = true if value["operator"] == 'GE'
-                    attr_hash[attribute_symbol][:high] = { "null_flavor" => "PINF", "inclusive?" => false }
-                  end
-                end
+                attr_hash[attribute_symbol] = build_range_hash(false, value["operator"], value["units"]["id"], value["valueLow"], value["valueHigh"])
               end
             end
           end
         end
         attr_hash
+      end
+
+      def build_range_hash is_temporal, operator, units, valueLow = nil, valueHigh = nil
+        range = { "type" => "IVL_PQ" }
+        if operator == "BW" or operator == "between"
+          range["low"] = { "value" => valueLow, "unit" => units }
+          range["high"] = { "value" => valueHigh, "unit" => units }
+        elsif operator == "EQ" or operator == "exactly"
+          range["low"] = { "type" => "PQ", "value" => valueLow, "unit" => units }
+          range["high"] = { "type" => "PQ", "value" => valueLow, "unit" => units }
+        else
+          if operator[0] == 'L' or operator[0] == '<'
+            range["high"] = { "type" => "PQ", "value" => valueLow, "unit" => units }
+            range["high"]["inclusive?"] = true if operator == 'LE' or operator == '<='
+            range["low"] = { "null_flavor" => "NINF", "inclusive?" => false } unless is_temporal
+          elsif  operator[0] == 'G' or operator[0] == '>'
+            range["low"] = { "type" => "PQ", "value" => valueLow, "unit" => units }
+            range["low"]["inclusive?"] = true if operator == 'GE' or operator == '>='
+            range["high"] = { "null_flavor" => "PINF", "inclusive?" => false } unless is_temporal
+          else
+            range = {}
+          end
+        end
+
+        range
       end
 
       def build_logical_operators element
@@ -179,7 +225,7 @@ module PhEMA
         # Loop through all immediate children
         phenotype["children"].each do |child|
           # Only select PhEMA objects - don't pull out KineticJS elements
-          if child["className"] == "PhemaGroup"
+          if child["className"] == "PhemaGroup" or child["className"] == "PhemaConnection"
             @id_element_map[child["id"]] = child
             # Add in the generated name so it's saved and can be reused, but only for datatypes or categories
             if child["attrs"]["element"]["type"] == "DataElement" or child["attrs"]["element"]["type"] == "Category"

@@ -94,7 +94,7 @@ module PhEMA
         }
       end
 
-      def data_criteria(qdmType, valueSet, attributes, effectiveTime, isNegated, isVariable, sourceId)
+      def data_criteria(qdmType, valueSet, attributes, effectiveTime, isNegated, isVariable, sourceId, temporalReferences)
         hqmf = QDM_HQMF_MAPPING.detect { |x| x[:id] == qdmType }
         unless (hqmf)
           return nil
@@ -120,15 +120,19 @@ module PhEMA
           "effective_time" => effectiveTime
         }
 
+        unless temporalReferences.nil?
+          result["temporal_references"] = temporalReferences
+        end
+
         unless(attributes.nil?)
           attributes.each_pair do |key, value|
-            value_hash = { "type" => value[:type] }
-            if value[:type] == "IVL_PQ" or value[:type] == "PQ"
-              value_hash["low"] = value[:low] if value[:low]
-              value_hash["high"] = value[:high] if value[:high]
-            elsif value[:type] != HQMF::AnyValue
-              value_hash["code_list_id"] = value[:code]
-              value_hash["title"] = value[:title]
+            value_hash = { "type" => value["type"] }
+            if value["type"] == "IVL_PQ" or value["type"] == "PQ"
+              value_hash["low"] = value["low"] if value["low"]
+              value_hash["high"] = value["high"] if value["high"]
+            elsif value["type"] != HQMF::AnyValue
+              value_hash["code_list_id"] = value["code"]
+              value_hash["title"] = value["title"]
             end
             result["field_values"][key.to_s.upcase] = value_hash
           end
