@@ -46,10 +46,10 @@ module PhEMA
       def measure_period(start_date, end_date)
         {
           "low" => {
-            "value" => start_date.nil? ? "19000101" : start_date
+            "value" => start_date.nil? ? "190001010000" : start_date
           },
           "high" => {
-            "value" => end_date.nil? ? Time.now.strftime("%Y%m%d") : end_date
+            "value" => end_date.nil? ? Time.now.strftime("%Y%m%d%H%M") : end_date
           }
         }
       end
