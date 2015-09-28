@@ -29,8 +29,8 @@ class HdsJsonTranslatorTest < Minitest::Test
 
   def test_measure_period
     result = @translator.measure_period(nil, nil)
-    assert_equal '19000101', result["low"]["value"]
-    assert_equal Time.now.strftime("%Y%m%d"), result["high"]["value"]
+    assert_equal '190001010000', result["low"]["value"]
+    assert_equal Time.now.strftime("%Y%m%d%H%M"), result["high"]["value"]
 
     result = @translator.measure_period("20140101", "20141231")
     assert_equal '20140101', result["low"]["value"]
@@ -70,14 +70,14 @@ class HdsJsonTranslatorTest < Minitest::Test
   end
 
   def test_data_criteria
-    result = @translator.data_criteria('test', nil, nil, nil, false, false, nil)
+    result = @translator.data_criteria('test', nil, nil, nil, false, false, nil, nil)
     assert_equal nil, result
 
     result = @translator.data_criteria(
       "http://rdf.healthit.gov/qdm/element#DeviceAllergy",
       { :code => "1.2.3", :title => "Value set test" },
-      { :severity => {:code => "2.3.4", :title => "Severity test" } },
-      nil, false, false, "A" )
+      { :severity => {"type" => "CD", "code" => "2.3.4", "title" => "Severity test" } },
+      nil, false, false, "A", nil )
     assert_equal '1.2.3', result["value"]["code_list_id"]
     assert_equal 'device_allergy', result["definition"]
     assert_equal 'Device, Allergy', result["description"]
@@ -93,15 +93,15 @@ class HdsJsonTranslatorTest < Minitest::Test
     result = @translator.data_criteria(
       "http://rdf.healthit.gov/qdm/element#DeviceAllergy",
       { :code => "1.2.3", :title => "Value set test" },
-      { :ordinal => {:code => "2.3.4" } },
-      nil, false, false, "A" )
+      { :ordinal => {"tpye" => "CD", "code" => "2.3.4" } },
+      nil, false, false, "A", nil )
     assert_equal 1, result["field_values"].length
     assert_equal '2.3.4', result["field_values"]["ORDINAL"]["code_list_id"]
 
     # Can handle when no attributes are specified
     result = @translator.data_criteria(
       "http://rdf.healthit.gov/qdm/element#DeviceAllergy",
-      { :code => "1.2.3", :title => "Value set test" }, nil, nil, false, false, "A" )
+      { :code => "1.2.3", :title => "Value set test" }, nil, nil, false, false, "A", nil )
     assert_equal 0, result["field_values"].length
   end
 

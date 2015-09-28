@@ -72,4 +72,53 @@ class PhenotypeJsonTranslatorTest < Minitest::Test
 
     # Test for value ranges, comparisons and direct equal
   end
+
+  def assert_range type_expected, type_actual, low_val_expected, low_val_actual, high_val_expected, high_val_actual, units_expected, low_units_actual, high_units_actual
+    assert_equal type_expected, type_actual
+    assert_equal low_val_expected, low_val_actual
+    if low_val_expected.nil?
+      assert_equal nil, low_units_actual
+    else
+      assert_equal units_expected, low_units_actual
+    end
+    assert_equal high_val_expected, high_val_actual
+    if high_val_expected.nil?
+      assert_equal nil, high_units_actual
+    else
+      assert_equal units_expected, high_units_actual
+    end
+  end
+
+  def test_build_range_hash_between
+    range = @translator.build_range_hash false, "BW", "cm", 5, 10
+    assert_range "IVL_PQ", range["type"], 5, range["low"]["value"], 10, range["high"]["value"], "cm", range["low"]["unit"], range["high"]["unit"]
+    range = @translator.build_range_hash false, "between", "cm", 5, 10
+    assert_range "IVL_PQ", range["type"], 5, range["low"]["value"], 10, range["high"]["value"], "cm", range["low"]["unit"], range["high"]["unit"]
+  end
+
+  def test_build_range_hash_equal
+    range = @translator.build_range_hash false, "EQ", "cm", 5
+    assert_range "IVL_PQ", range["type"], 5, range["low"]["value"], 5, range["high"]["value"], "cm", range["low"]["unit"], range["high"]["unit"]
+    range = @translator.build_range_hash false, "exactly", "cm", 5
+    assert_range "IVL_PQ", range["type"], 5, range["low"]["value"], 5, range["high"]["value"], "cm", range["low"]["unit"], range["high"]["unit"]
+  end
+
+  def test_build_range_hash_less_than
+    range = @translator.build_range_hash false, "LT", "cm", 5
+    assert_range "IVL_PQ", range["type"], nil, range["low"]["value"], 5, range["high"]["value"], "cm", range["low"]["unit"], range["high"]["unit"]
+    range = @translator.build_range_hash false, "<", "cm", 5
+    assert_range "IVL_PQ", range["type"], nil, range["low"]["value"], 5, range["high"]["value"], "cm", range["low"]["unit"], range["high"]["unit"]
+  end
+
+  def test_build_range_hash_greater_than
+    range = @translator.build_range_hash false, "GT", "cm", 5
+    assert_range "IVL_PQ", range["type"], 5, range["low"]["value"], nil, range["high"]["value"], "cm", range["low"]["unit"], range["high"]["unit"]
+    range = @translator.build_range_hash false, ">", "cm", 5
+    assert_range "IVL_PQ", range["type"], 5, range["low"]["value"], nil, range["high"]["value"], "cm", range["low"]["unit"], range["high"]["unit"]
+  end
+
+  def test_build_range_hash_unknown_operator
+    range = @translator.build_range_hash false, "BLAH", "cm", 5
+    assert_equal true, range.empty?
+  end
 end

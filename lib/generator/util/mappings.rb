@@ -103,5 +103,33 @@ module PhEMA
       "http://rdf.healthit.gov/qdm/element#Or" => "atLeastOneTrue",
       "http://rdf.healthit.gov/qdm/element#Not" => "allFalse"
     }
+
+    QDM_HQMF_TEMPORAL_TYPE_MAPPING = {
+      "http://rdf.healthit.gov/qdm/element#EndsAfterEndOf" => "EAE",
+      "http://rdf.healthit.gov/qdm/element#StartsAfterOrConcurrentWithEndOf" => "SAEORSCWE",
+      "http://rdf.healthit.gov/qdm/element#EndsDuring" => "EDU",
+      "http://rdf.healthit.gov/qdm/element#StartsBeforeOrConcurrentWithEndOf" => "SBEORSCWE",
+      "http://rdf.healthit.gov/qdm/element#EndsConcurrentWithStartOf" => "ECWS",
+      "http://rdf.healthit.gov/qdm/element#StartsDuring" => "SDU",
+      "http://rdf.healthit.gov/qdm/element#StartsAfterOrConcurrentWithStartOf" => "SASORSCW",
+      "http://rdf.healthit.gov/qdm/element#StartsAfterStartOf" => "SAS",
+      "http://rdf.healthit.gov/qdm/element#EndsBeforeEndOf" => "EBE",
+      "http://rdf.healthit.gov/qdm/element#EndsBeforeOrConcurrentWithEndOf" => "EBEORECW",
+      "http://rdf.healthit.gov/qdm/element#EndsBeforeStartOf" => "EBS",
+      "http://rdf.healthit.gov/qdm/element#During" => "DURING",
+      "http://rdf.healthit.gov/qdm/element#EndsAfterOrConcurrentWithStartOf" => "EASORECWS",
+      "http://rdf.healthit.gov/qdm/element#StartsAfterEndOf" => "SAE",
+      "http://rdf.healthit.gov/qdm/element#StartsBeforeEndOf" => "SBE",
+      "http://rdf.healthit.gov/qdm/element#StartsBeforeStartOf" => "SBS",
+      "http://rdf.healthit.gov/qdm/element#StartsBeforeOrConcurrentWithStartOf" => "SBSORSCW",
+      "http://rdf.healthit.gov/qdm/element#EndsAfterOrConcurrentWithEndOf" => "EAEORECW",
+      "http://rdf.healthit.gov/qdm/element#StartsConcurrentWithEndOf" => "SCWE",
+      "http://rdf.healthit.gov/qdm/element#EndsAfterStartOf" => "EAS",
+      "http://rdf.healthit.gov/qdm/element#EndsBeforeOrConcurrentWithStartOf" => "EBSORECWS",
+      "http://rdf.healthit.gov/qdm/element#EndsConcurrentWith" => "ECW",
+      "http://rdf.healthit.gov/qdm/element#StartsConcurrentWith" => "SCW",
+      "http://rdf.healthit.gov/qdm/element#ConcurrentWith" => "CONCURRENT",
+      "http://rdf.healthit.gov/qdm/element#Overlaps" => "OVERLAP"
+    }
   end
 end
