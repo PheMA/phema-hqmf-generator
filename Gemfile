@@ -15,8 +15,7 @@ group :test do
   gem 'simplecov', :require => false
   gem 'webmock'
 
-  gem "minitest", "5.7.0"
-  gem 'minitest-reporters', "1.0.19"
+  gem "minitest", "~> 4.0"
   gem 'awesome_print', :require => 'ap'
 
 end

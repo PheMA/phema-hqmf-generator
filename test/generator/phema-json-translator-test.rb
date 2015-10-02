@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'json'
 
-class PhenotypeJsonTranslatorTest < Minitest::Test
+class PhenotypeJsonTranslatorTest < Minitest::Unit::TestCase
   def setup
     @translator = PhEMA::Phenotype::JsonTranslator.new
     # This example phenotype has one logical operator with two elements contained within
