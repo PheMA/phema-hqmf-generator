@@ -26,7 +26,7 @@ module PhEMA
       { :id => "http://rdf.healthit.gov/qdm/element#DiagnosticStudyRecommended", :name => "DiagnosticStudyRecommended", :description => "Diagnostic Study, Recommended", :type => "", :definition => "diagnostic_study", :status => "recommended" },
 
       { :id => "http://rdf.healthit.gov/qdm/element#EncounterActive", :name => "EncounterActive", :description => "Encounter, Active", :type => "encounters", :definition => "encounter", :status => "active" },
-      { :id => "http://rdf.healthit.gov/qdm/element#EncounterOrder", :name => "EncounterOrder", :name => "Encounter, Order", :type => "encounters", :definition => "encounter", :status => "ordered" },
+      { :id => "http://rdf.healthit.gov/qdm/element#EncounterOrder", :name => "EncounterOrder", :description => "Encounter, Order", :type => "encounters", :definition => "encounter", :status => "ordered" },
       { :id => "http://rdf.healthit.gov/qdm/element#EncounterPerformed", :name => "EncounterPerformed", :description => "Encounter, Performed", :type => "encounters", :definition => "encounter", :status => "performed" },
       { :id => "http://rdf.healthit.gov/qdm/element#EncounterRecommended", :name => "EncounterRecommended", :description => "Encounter, Recommended", :type => "encounters", :definition => "encounter", :status => "recommended" },
 
