@@ -25,7 +25,6 @@ module PhEMA
           "title" => "Test Measure",
           "description" => "This is a test measure",
           "hqmf_version_number" => "v1",  # This is the internal measure version, not a formal CMS version
-          "population_criteria" => [],
           "source_data_criteria" => source_data_criteria,
           "data_criteria" => data_criteria,
           "attributes" => [
@@ -89,8 +88,15 @@ module PhEMA
           false, # Negated?
           false, # Is a variable?
           (isSource ? '' : element["hds_name"]),
-          build_temporal_references_for_element(element)
+          build_temporal_references_for_element(element),
+          build_subsets_for_element(element)
         )
+      end
+
+      def build_subsets_for_element element
+        [
+          {"type" => "THIRD"}
+        ]
       end
 
       # Build the array of temporal references that exist (if any) for an element.  Although temporal relationships

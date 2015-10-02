@@ -94,7 +94,7 @@ module PhEMA
         }
       end
 
-      def data_criteria(qdmType, valueSet, attributes, effectiveTime, isNegated, isVariable, sourceId, temporalReferences)
+      def data_criteria(qdmType, valueSet, attributes, effectiveTime, isNegated, isVariable, sourceId, temporalReferences, subsets)
         hqmf = QDM_HQMF_MAPPING.detect { |x| x[:id] == qdmType }
         unless (hqmf)
           return nil
@@ -122,6 +122,10 @@ module PhEMA
 
         unless temporalReferences.nil?
           result["temporal_references"] = temporalReferences
+        end
+
+        unless subsets.nil?
+          result["subset_operators"] = subsets
         end
 
         unless(attributes.nil?)
