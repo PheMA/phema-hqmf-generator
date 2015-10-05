@@ -121,4 +121,11 @@ class PhenotypeJsonTranslatorTest < Minitest::Unit::TestCase
     range = @translator.build_range_hash false, "BLAH", "cm", 5
     assert_equal true, range.empty?
   end
+
+  def test_set_phenotype_metadata
+    phenotype = JSON.parse('{"attrs":{"id":"mainLayer","phenotypeData":{"id":"1234567","name":"Test phenotype","description":"test phenotype description"}},"id":3,"className":"Layer","children":[]}')
+    measure = @translator.set_phenotype_metadata(phenotype, {})
+    assert_equal "Test phenotype", measure["title"]
+    assert_equal "test phenotype description", measure["description"]
+  end
 end

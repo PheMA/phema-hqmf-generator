@@ -21,9 +21,9 @@ module PhEMA
 
         # Need to build into authoring tool, including title & other metadata in the JSON that we
         # get sent.
-        measure = HQMF::Document.from_json({
-          "title" => "Test Measure",
-          "description" => "This is a test measure",
+        measure_definition = {
+          #"title" => "Test Measure",
+          #"description" => "This is a test measure",
           "hqmf_version_number" => "v1",  # This is the internal measure version, not a formal CMS version
           "source_data_criteria" => source_data_criteria,
           "data_criteria" => data_criteria,
@@ -39,8 +39,18 @@ module PhEMA
               "preconditions" => hds_logical_operators
             }
           }
-        })
+        }
+        measure_definition = set_phenotype_metadata(phenotype, measure_definition)
 
+        measure = HQMF::Document.from_json(measure_definition)
+        measure
+      end
+
+      def set_phenotype_metadata phenotype, measure
+        if phenotype["attrs"] and phenotype["attrs"]["phenotypeData"]
+          measure["title"] = phenotype["attrs"]["phenotypeData"]["name"]
+          measure["description"] = phenotype["attrs"]["phenotypeData"]["description"]
+        end
         measure
       end
 
