@@ -105,7 +105,7 @@ module PhEMA
 
       def build_subsets_for_element element
         [
-          {"type" => "THIRD"}
+          #{"type" => "THIRD"}
         ]
       end
 
@@ -198,6 +198,18 @@ module PhEMA
         operators = find_logical_operators(element)
 
         hqmf_operators = []
+
+        if operators.empty?
+          items = element["children"].find_all { |ch| ch["className"] == "PhemaGroup" }
+
+          contained_elements = []
+          items.each { |item| contained_elements << @id_element_map[item["id"]] }
+          contained_elements.compact!
+          hqmf_operators = items.map {|item| { "id" => item["id"], "reference" => item["hds_name"] }}
+          puts hqmf_operators
+          return hqmf_operators
+        end
+
         operators.each do |operator|
           # Get the identifiers of elements that are in this logical operator
           element_ids = operator["attrs"]["phemaObject"]["containedElements"].map{ |el| el["id"] }
@@ -244,7 +256,7 @@ module PhEMA
           if child["className"] == "PhemaGroup" or child["className"] == "PhemaConnection"
             @id_element_map[child["id"]] = child
             # Add in the generated name so it's saved and can be reused, but only for datatypes or categories
-            if child["attrs"]["element"]["type"] == "DataElement" or child["attrs"]["element"]["type"] == "Category"
+            if child["attrs"]["element"]["type"] == "DataElement" or child["attrs"]["element"]["type"] == "Category" or child["attrs"]["element"]["type"] == "SubsetOperator"
               value_set = get_value_set_for_element child
               @id_element_map[child["id"]]["hds_name"] = @hds_translator.generate_entity_name(child["attrs"]["element"]["uri"], value_set["name"], child["id"])
             end

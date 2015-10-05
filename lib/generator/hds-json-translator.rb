@@ -157,6 +157,7 @@ module PhEMA
         end
 
         id ||= @data_element_counter
+        valueSet ||= ''
 
         name = (hqmf[:description] + '_' + valueSet).gsub(/[\s,]{2,}/, ' ').gsub(/[\s]/, '_') + '_' + id.to_s
         @data_element_counter = @data_element_counter + 1  # Increment, even if it's never used
