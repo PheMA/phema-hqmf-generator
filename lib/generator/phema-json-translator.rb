@@ -86,13 +86,12 @@ module PhEMA
       # @return [Hash] The HDS JSON that defines a data element
       def phema_data_type_to_hds_json element, isSource
         value_set = get_value_set_for_element element
+        result_range = get_result_attribute_for_element element
 
         @hds_translator.data_criteria(
           element["attrs"]["element"]["uri"],
-          {
-            :code => value_set["id"],
-            :title => value_set["name"]
-          },
+          value_set,
+          build_value_for_element(value_set, (result_range.nil? ? nil : result_range[1])),
           build_attributes_for_element(element),
           nil,  # Date range
           false, # Negated?
@@ -107,6 +106,39 @@ module PhEMA
         [
           #{"type" => "THIRD"}
         ]
+      end
+
+      # Construct the appropriate value structure for an element
+      # @param valueSet [Hash] The value set assigned to the element
+      # @param range [Hash] The range value (if defined) for the element
+      # @return [Hash] The HDS JSON for the element's value
+      def build_value_for_element valueSet, value
+        if value.nil?
+          return {
+            "type" => "CD",
+            "code_list_id" => valueSet["id"],
+            "title" => valueSet["name"],
+          }
+        else
+          if value and value["type"]
+            if value["type"] == "present"
+              return {"type" => "ANYNonNull" }
+            elsif value["type"] == "value"
+              return build_range_hash(false, value["operator"], value["units"]["id"], value["valueLow"], value["valueHigh"])
+            end
+          end
+        end
+        nil
+      end
+
+      # Given an element, pull out the result range attribute and format it as HDS JSON
+      # @param element [Hash] The PhEMA element we are interested in
+      # @return [Array] The result attribute, or nil of none exists
+      def get_result_attribute_for_element element
+        return nil unless element["attrs"] and element["attrs"]["phemaObject"] and element["attrs"]["phemaObject"]["attributes"]
+        attr_hash = Hash.new
+        attribute = element["attrs"]["phemaObject"]["attributes"].find { |key, value| key == "Result" }
+        attribute
       end
 
       # Build the array of temporal references that exist (if any) for an element.  Although temporal relationships
@@ -151,7 +183,9 @@ module PhEMA
         attr_hash = Hash.new
         attributes = element["attrs"]["phemaObject"]["attributes"]
         attributes.each do |key, value|
-          if value
+          # We need to handle result as a special entry, and so it's excluded from general attribute processing.
+          # Result will be used when we define the value of the data element.
+          if value and key != 'Result'
             attribute_symbol = key.underscore.to_sym
             if value.is_a?(Array)
               if value.length > 0

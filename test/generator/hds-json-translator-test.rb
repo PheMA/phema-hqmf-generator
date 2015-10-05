@@ -70,12 +70,13 @@ class HdsJsonTranslatorTest < Minitest::Unit::TestCase
   end
 
   def test_data_criteria
-    result = @translator.data_criteria('test', nil, nil, nil, false, false, nil, nil, nil)
+    result = @translator.data_criteria('test', nil, nil, nil, nil, false, false, nil, nil, nil)
     assert_equal nil, result
 
     result = @translator.data_criteria(
       "http://rdf.healthit.gov/qdm/element#DeviceAllergy",
       { :code => "1.2.3", :title => "Value set test" },
+      { "type" => "CD", "code_list_id" => "1.2.3", "title" => "Value set test" },
       { :severity => {"type" => "CD", "code" => "2.3.4", "title" => "Severity test" } },
       nil, false, false, "A", nil, nil )
     assert_equal '1.2.3', result["value"]["code_list_id"]
@@ -92,7 +93,7 @@ class HdsJsonTranslatorTest < Minitest::Unit::TestCase
 
     result = @translator.data_criteria(
       "http://rdf.healthit.gov/qdm/element#DeviceAllergy",
-      { :code => "1.2.3", :title => "Value set test" },
+      { :code => "1.2.3", :title => "Value set test" }, nil,
       { :ordinal => {"tpye" => "CD", "code" => "2.3.4" } },
       nil, false, false, "A", nil, nil )
     assert_equal 1, result["field_values"].length
@@ -101,7 +102,7 @@ class HdsJsonTranslatorTest < Minitest::Unit::TestCase
     # Can handle when no attributes are specified
     result = @translator.data_criteria(
       "http://rdf.healthit.gov/qdm/element#DeviceAllergy",
-      { :code => "1.2.3", :title => "Value set test" }, nil, nil, false, false, "A", nil, nil )
+      { :code => "1.2.3", :title => "Value set test" }, nil, nil, nil, false, false, "A", nil, nil )
     assert_equal 0, result["field_values"].length
   end
 

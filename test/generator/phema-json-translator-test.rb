@@ -52,6 +52,11 @@ class PhenotypeJsonTranslatorTest < Minitest::Unit::TestCase
     logical_operators = @translator.build_logical_operators(nested_logical_phenotype)
     assert_equal 1, logical_operators.length
     assert_equal 2, logical_operators[0]["preconditions"][0]["preconditions"].length
+
+    # No logical operators explicitly defined
+    no_logical_operators = JSON.parse('{"attrs":{"id":"mainLayer"},"id":3,"className":"Layer","children":[{"attrs":{"phemaObject":{"attributes":{"PatientPreference":[],"Ordinality":[],"ProviderPreference":[],"NegationRationale":[],"Severity":[],"AnatomicalLocationSite":[],"HealthRecordField":[],"Source":[],"Recorder":[],"Result":{"valueSet":[],"type":"present"},"Dose":{"valueSet":[]}},"className":"DataElement"},"draggable":true,"x":235,"y":153,"width":175,"height":114,"element":{"id":"LaboratoryTestOrder","name":"Laboratory Test, Order","description":"Data elements that meet criteria using this datatype should document a request for the laboratory test indicated by the QDM category and its corresponding value set.","uri":"http://rdf.healthit.gov/qdm/element#LaboratoryTestOrder","type":"DataElement"}},"id":6,"className":"PhemaGroup","children":[{"attrs":{"width":175,"height":114,"fill":"#dbeef4","name":"mainRect","stroke":"black","strokeWidth":3},"id":7,"className":"Rect"},{"attrs":{"width":175,"fontFamily":"Calibri","fontSize":14,"fill":"black","text":"Laboratory Test, Order","name":"header","align":"center","padding":5,"height":"auto"},"id":8,"className":"Text"},{"attrs":{"x":10,"y":29,"width":155,"height":75,"fill":"#EEEEEE","name":"termDrop","stroke":"#CCCCCC","strokeWidth":1},"id":9,"className":"Rect"},{"attrs":{"x":10,"y":29,"width":155,"height":75,"fontFamily":"Calibri","fontSize":14,"fill":"gray","text":"Drag and drop clinical terms or value sets here, or click to search","align":"center","padding":5,"name":"termDropText"},"id":10,"className":"Text"},{"attrs":{"connections":[],"y":57,"radius":7.5,"fill":"white","name":"leftConnector","stroke":"black","strokeWidth":1},"id":11,"className":"PhemaConnector"},{"attrs":{"connections":[],"x":175,"y":57,"radius":7.5,"fill":"white","name":"rightConnector","stroke":"black","strokeWidth":1},"id":12,"className":"PhemaConnector"}]}]}')
+    @translator.build_id_element_map(no_logical_operators)
+    assert_equal 1, @translator.build_logical_operators(no_logical_operators).length
   end
 
   def test_build_logical_operators_elements_not_found
@@ -68,7 +73,7 @@ class PhenotypeJsonTranslatorTest < Minitest::Unit::TestCase
 
     element_with_attrs = JSON.parse('{"attrs":{"phemaObject":{"valueSet":{"id":13},"attributes":{"PatientPreference":[],"Ordinality":[{"id":"2.16.840.1.113883.3.464.1003.101.11.1040","name":"Outpatient Consultation","uri":"urn:oid:2.16.840.1.113883.3.464.1003.101.11.1040/version/20140501","type":"ValueSet","loadDetailStatus":"success"}],"ProviderPreference":[],"NegationRationale":[],"Severity":[],"AnatomicalLocationSite":[],"HealthRecordField":[],"Source":[],"Recorder":[],"Result":{"valueSet":[],"type":"present"},"Dose":{"valueSet":[],"type":"present"}},"className":"DataElement"},"draggable":true,"x":50,"y":50,"width":195,"height":73,"element":{"id":"DiagnosisActive","name":"Diagnosis, Active","uri":"http://rdf.healthit.gov/qdm/element#DiagnosisActive","type":"DataElement"}},"id":6,"className":"PhemaGroup","children":[{"attrs":{"phemaObject":{"className":"ValueSet"},"element":{"id":"2.16.840.1.113883.3.600.1.1523","name":"Above Normal f/u icd 10","uri":"urn:oid:2.16.840.1.113883.3.600.1.1523/version/20140501","type":"ValueSet","loadDetailStatus":"success"}},"id":13,"className":"PhemaGroup","children":[{"attrs":{"width":175,"height":34,"fill":"#eedbf4","name":"mainRect","stroke":"black","strokeWidth":1},"id":14,"className":"Rect"}]}]}')
     attributes = @translator.build_attributes_for_element(element_with_attrs)
-    assert_equal 3, attributes.length  #All that comes out are attributes with defined values
+    assert_equal 2, attributes.length  #All that comes out are attributes with defined values, with the result attribute removed
 
     # Test for value ranges, comparisons and direct equal
   end
@@ -127,5 +132,38 @@ class PhenotypeJsonTranslatorTest < Minitest::Unit::TestCase
     measure = @translator.set_phenotype_metadata(phenotype, {})
     assert_equal "Test phenotype", measure["title"]
     assert_equal "test phenotype description", measure["description"]
+  end
+
+  def test_build_value_for_element
+    value_set = {"id" => "1.2.3", "name" => "Test"}
+    range = {"type" => "value", "operator" => "exactly", "valueLow" => "100", "units" => {"id" => "mg"}}
+
+    # Value set only
+    value = @translator.build_value_for_element(value_set, nil)
+    assert_equal "CD", value["type"]
+    assert_equal "1.2.3", value["code_list_id"]
+    assert_equal "Test", value["title"]
+
+    # Value set and range - ignore value set
+    value = @translator.build_value_for_element(value_set, range)
+    assert_equal "IVL_PQ", value["type"]
+    assert_equal nil, value["code_list_id"]
+    assert_equal "100", value["low"]["value"]
+    assert_equal "mg", value["low"]["unit"]
+
+    # Nil value set - just making sure it doesn't crash & uses range
+    value = @translator.build_value_for_element(nil, range)
+    assert_equal "IVL_PQ", value["type"]
+
+    # Look for presence of a value
+    value = @translator.build_value_for_element(nil, {"type" => "present"})
+    assert_equal "ANYNonNull", value["type"]
+  end
+
+  def test_get_result_attribute_for_element
+    element = JSON.parse('{"attrs":{"phemaObject":{"attributes":{"PatientPreference":[],"Ordinality":[],"ProviderPreference":[],"NegationRationale":[],"Severity":[],"AnatomicalLocationSite":[],"HealthRecordField":[],"Source":[],"Recorder":[],"Result":{"valueSet":[],"type":"present"},"Dose":{"valueSet":[]}},"className":"DataElement"},"draggable":true,"x":235,"y":153,"width":175,"height":114,"element":{"id":"LaboratoryTestOrder","name":"Laboratory Test, Order","description":"Data elements that meet criteria using this datatype should document a request for the laboratory test indicated by the QDM category and its corresponding value set.","uri":"http://rdf.healthit.gov/qdm/element#LaboratoryTestOrder","type":"DataElement"}},"id":6,"className":"PhemaGroup","children":[{"attrs":{"width":175,"height":114,"fill":"#dbeef4","name":"mainRect","stroke":"black","strokeWidth":3},"id":7,"className":"Rect"},{"attrs":{"width":175,"fontFamily":"Calibri","fontSize":14,"fill":"black","text":"Laboratory Test, Order","name":"header","align":"center","padding":5,"height":"auto"},"id":8,"className":"Text"},{"attrs":{"x":10,"y":29,"width":155,"height":75,"fill":"#EEEEEE","name":"termDrop","stroke":"#CCCCCC","strokeWidth":1},"id":9,"className":"Rect"},{"attrs":{"x":10,"y":29,"width":155,"height":75,"fontFamily":"Calibri","fontSize":14,"fill":"gray","text":"Drag and drop clinical terms or value sets here, or click to search","align":"center","padding":5,"name":"termDropText"},"id":10,"className":"Text"},{"attrs":{"connections":[],"y":57,"radius":7.5,"fill":"white","name":"leftConnector","stroke":"black","strokeWidth":1},"id":11,"className":"PhemaConnector"},{"attrs":{"connections":[],"x":175,"y":57,"radius":7.5,"fill":"white","name":"rightConnector","stroke":"black","strokeWidth":1},"id":12,"className":"PhemaConnector"}]}')
+    result = @translator.get_result_attribute_for_element(element)
+    assert_equal "Result", result[0]
+    assert_equal "present", result[1]["type"]
   end
 end

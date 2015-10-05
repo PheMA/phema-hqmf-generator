@@ -94,18 +94,14 @@ module PhEMA
         }
       end
 
-      def data_criteria(qdmType, valueSet, attributes, effectiveTime, isNegated, isVariable, sourceId, temporalReferences, subsets)
+      def data_criteria(qdmType, valueSet, value, attributes, effectiveTime, isNegated, isVariable, sourceId, temporalReferences, subsets)
         hqmf = QDM_HQMF_MAPPING.detect { |x| x[:id] == qdmType }
         unless (hqmf)
           return nil
         end
 
         result = {
-          "value" => {
-            "type" => "CD",
-            "code_list_id" => valueSet[:code],
-            "title" => valueSet[:title],
-          },
+          "value" => value,
           "inline_code_list" => hqmf[:code],
           "code_list_id" => valueSet[:code],
           "definition" => hqmf[:definition],
