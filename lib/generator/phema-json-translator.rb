@@ -263,7 +263,7 @@ module PhEMA
               if el["hds_name"]
                 item["reference"] = el["hds_name"]
               else
-                item = build_logical_operators(operator).first
+                item = build_logical_operators(el).first
               end
               item
             end
@@ -274,9 +274,13 @@ module PhEMA
         hqmf_operators
       end
 
-      def find_logical_operators phenotype
-        return [] unless phenotype["children"]
-        phenotype["children"].select { |item| item["attrs"] && item["attrs"]["phemaObject"] && item["attrs"]["phemaObject"]["className"] == 'LogicalOperator' }
+      def find_logical_operators element
+        # If I am the logical operator, I return myself
+        return [ element ] if (element["attrs"] and element["attrs"]["phemaObject"] and element["attrs"]["phemaObject"]["className"] == 'LogicalOperator')
+
+        # Otherwise, look for child operators
+        return [] unless element["children"]
+        element["children"].select { |item| item["attrs"] && item["attrs"]["phemaObject"] && item["attrs"]["phemaObject"]["className"] == 'LogicalOperator' }
       end
 
       # Recursively looks at all PhEMA objects (data elements, logical operators, etc.) within the phenotype
