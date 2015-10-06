@@ -230,7 +230,7 @@ module PhEMA
 
       def build_logical_operators element
         operators = find_logical_operators(element)
-
+        puts "*** Processing #{element['id']} with #{operators.length} operators"
         hqmf_operators = []
 
         if operators.empty?
@@ -240,18 +240,21 @@ module PhEMA
           items.each { |item| contained_elements << @id_element_map[item["id"]] }
           contained_elements.compact!
           hqmf_operators = items.map {|item| { "id" => item["id"], "reference" => item["hds_name"] }}
-          puts hqmf_operators
+          puts "******* ---------------- early exit"
           return hqmf_operators
         end
 
         operators.each do |operator|
           # Get the identifiers of elements that are in this logical operator
           element_ids = operator["attrs"]["phemaObject"]["containedElements"].map{ |el| el["id"] }
+          puts "    Operator #{operator['id']} has children #{element_ids.inspect}"
 
           # Search the overall elements by these IDs
           contained_elements = []
           element_ids.each { |id| contained_elements << @id_element_map[id] }
           contained_elements.compact!
+
+          puts "    Contained elements size: #{contained_elements.length}"
 
           # Build the HDS structures for this operator
           hqmf_type = PhEMA::HealthDataStandards::QDM_HQMF_LOGICAL_CONJUNCTION_MAPPING[operator["attrs"]["element"]["uri"]]
@@ -261,9 +264,12 @@ module PhEMA
             "preconditions" => contained_elements.map do |el|
               item = { "id" => el["id"] }
               if el["hds_name"]
+                puts "    Adding reference to #{el['id']} - #{el['hds_name']}"
                 item["reference"] = el["hds_name"]
               else
-                item = build_logical_operators(operator).first
+                puts "    Recursively calling #{operator['id']}"
+                item = build_logical_operators(operator)
+                puts "    Item set after recursive call"
               end
               item
             end
@@ -271,6 +277,7 @@ module PhEMA
           hqmf_operators << operator_definition
         end
 
+        puts "          Result:  #{hqmf_operators.inspect}"
         hqmf_operators
       end
 
