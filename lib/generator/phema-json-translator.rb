@@ -9,12 +9,14 @@ module PhEMA
       def initialize
         @hds_translator = PhEMA::HealthDataStandards::JsonTranslator.new
         @id_element_map = Hash.new
+        @debugging = false
       end
 
       def to_hds json_string
         phenotype = JSON.parse(json_string)
         return if phenotype.nil?
         build_id_element_map(phenotype)
+        puts "INITIATING ---------------------------" if @debugging
         hds_logical_operators = build_logical_operators(phenotype)
         data_criteria = build_data_criteria(false)
         source_data_criteria = build_data_criteria(true)
@@ -230,7 +232,7 @@ module PhEMA
 
       def build_logical_operators element
         operators = find_logical_operators(element)
-        puts "*** Processing #{element['id']} with #{operators.length} operators"
+        puts "*** Processing #{element['id']} with #{operators.length} operators" if @debugging
         hqmf_operators = []
 
         if operators.empty?
@@ -240,21 +242,22 @@ module PhEMA
           items.each { |item| contained_elements << @id_element_map[item["id"]] }
           contained_elements.compact!
           hqmf_operators = items.map {|item| { "id" => item["id"], "reference" => item["hds_name"] }}
-          puts "******* ---------------- early exit"
+          puts "******* ---------------- early exit" if @debugging
           return hqmf_operators
         end
 
         operators.each do |operator|
           # Get the identifiers of elements that are in this logical operator
           element_ids = operator["attrs"]["phemaObject"]["containedElements"].map{ |el| el["id"] }
-          puts "    Operator #{operator['id']} has children #{element_ids.inspect}"
+          puts "    Operator #{operator['id']} has children #{element_ids.inspect}" if @debugging
 
           # Search the overall elements by these IDs
           contained_elements = []
           element_ids.each { |id| contained_elements << @id_element_map[id] }
           contained_elements.compact!
 
-          puts "    Contained elements size: #{contained_elements.length}"
+          puts "    Contained elements size: #{contained_elements.length}" if @debugging
+          contained_elements.each { |e| puts "       --- el: #{e['id']}" } if @debugging
 
           # Build the HDS structures for this operator
           hqmf_type = PhEMA::HealthDataStandards::QDM_HQMF_LOGICAL_CONJUNCTION_MAPPING[operator["attrs"]["element"]["uri"]]
@@ -264,24 +267,30 @@ module PhEMA
             "preconditions" => contained_elements.map do |el|
               item = { "id" => el["id"] }
               if el["hds_name"]
-                puts "    Adding reference to #{el['id']} - #{el['hds_name']}"
+                puts "    Adding reference to #{el['id']} - #{el['hds_name']}" if @debugging
                 item["reference"] = el["hds_name"]
               else
-                puts "    Recursively calling #{operator['id']}"
-                item = build_logical_operators(operator)
-                puts "    Item set after recursive call"
+                puts "    >>> Recursively calling #{el['id']} for #{operator['id']}" if @debugging
+                puts el.inspect if @debugging
+                item = build_logical_operators(el).first
+                puts "        << Item set after recursive call" if @debugging
               end
               item
             end
           }
+          puts "             - Operator definition: #{operator_definition.inspect}" if @debugging
           hqmf_operators << operator_definition
         end
 
-        puts "          Result:  #{hqmf_operators.inspect}"
+        puts "          Result:  #{hqmf_operators.inspect}" if @debugging
         hqmf_operators
       end
 
       def find_logical_operators phenotype
+        # If I am the logical operator, I return myself
+        return [ phenotype ] if (phenotype["attrs"] and phenotype["attrs"]["phemaObject"] and phenotype["attrs"]["phemaObject"]["className"] == 'LogicalOperator')
+
+        # Otherwise, look for child operators
         return [] unless phenotype["children"]
         phenotype["children"].select { |item| item["attrs"] && item["attrs"]["phemaObject"] && item["attrs"]["phemaObject"]["className"] == 'LogicalOperator' }
       end

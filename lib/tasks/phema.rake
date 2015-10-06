@@ -16,9 +16,9 @@ namespace :phema do
 
     translator = PhEMA::Phenotype::JsonTranslator.new
     if args.format == 'hds'
-      translator.to_hds_json(contents)
+      puts translator.to_hds_json(contents)
     elsif args.format == 'hqmf'
-      translator.to_hqmf(contents)
+      puts translator.to_hqmf(contents)
     end
   end
 end
