@@ -5,7 +5,7 @@ gem 'health-data-standards', path: '../health-data-standards'
 group :development do
   gem 'rake'
   gem 'pry', '~> 0.9.10'
-  gem 'pry-nav', '~> 0.2.2', platforms: [:ruby_22]
+  gem 'pry-nav', '~> 0.2.2'
 end
 
 group :test do
