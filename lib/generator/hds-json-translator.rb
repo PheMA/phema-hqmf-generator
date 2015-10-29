@@ -102,8 +102,9 @@ module PhEMA
 
         result = {
           "value" => value,
-          "inline_code_list" => hqmf[:code],
-          "code_list_id" => valueSet[:code],
+          "title" => valueSet["name"],
+          "display_name" => valueSet["name"],
+          "code_list_id" => valueSet["id"],
           "definition" => hqmf[:definition],
           "description" => hqmf[:description],
           "hard_status" => false,
