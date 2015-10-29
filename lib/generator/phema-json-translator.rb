@@ -229,12 +229,12 @@ module PhEMA
         else
           if operator[0] == 'L' or operator[0] == '<'
             range["high"] = { "type" => "PQ", "value" => valueLow, "unit" => units }
-            range["high"]["inclusive?"] = true if operator == 'LE' or operator == '<='
-            range["low"] = { "null_flavor" => "NINF", "inclusive?" => false } unless is_temporal
+            range["high"]["inclusive?"] = (operator == 'LE' or operator == '<=')
+            #range["low"] = { "null_flavor" => "NINF", "inclusive?" => false } unless is_temporal
           elsif  operator[0] == 'G' or operator[0] == '>'
             range["low"] = { "type" => "PQ", "value" => valueLow, "unit" => units }
-            range["low"]["inclusive?"] = true if operator == 'GE' or operator == '>='
-            range["high"] = { "null_flavor" => "PINF", "inclusive?" => false } unless is_temporal
+            range["low"]["inclusive?"] = (operator == 'GE' or operator == '>=')
+            #range["high"] = { "null_flavor" => "PINF", "inclusive?" => false } unless is_temporal
           else
             range = {}
           end
