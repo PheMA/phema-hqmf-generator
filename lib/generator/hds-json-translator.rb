@@ -106,7 +106,6 @@ module PhEMA
           "display_name" => valueSet["name"],
           "code_list_id" => valueSet["id"],
           "definition" => hqmf[:definition],
-          "description" => hqmf[:description],
           "description" => hqmf[:description] + ": " + valueSet["name"],
           "hard_status" => false,
           "negation" => isNegated,
