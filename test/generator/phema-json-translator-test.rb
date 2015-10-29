@@ -132,6 +132,20 @@ class PhenotypeJsonTranslatorTest < Minitest::Unit::TestCase
     measure = @translator.set_phenotype_metadata(phenotype, {})
     assert_equal "Test phenotype", measure["title"]
     assert_equal "test phenotype description", measure["description"]
+    assert_equal "1234567", measure["measure_id"]
+    assert_equal "1234567", measure["hqmf_id"]
+    assert_equal "1234567", measure["hqmf_set_id"]
+  end
+
+  def test_set_phenotype_metadata_when_empty
+    phenotype = JSON.parse('{"attrs":{}}')
+    measure = @translator.set_phenotype_metadata(phenotype, {})
+    assert !measure["title"].empty?
+    assert measure["description"].nil?
+    assert !measure["measure_id"].empty?
+    assert_equal measure["measure_id"], measure["hqmf_id"]
+    assert !measure["hqmf_set_id"].empty?
+    assert measure["measure_id"] != measure["hqmf_set_id"]
   end
 
   def test_build_value_for_element
@@ -165,5 +179,19 @@ class PhenotypeJsonTranslatorTest < Minitest::Unit::TestCase
     result = @translator.get_result_attribute_for_element(element)
     assert_equal "Result", result[0]
     assert_equal "present", result[1]["type"]
+  end
+
+  def test_get_value_set_for_element_when_empty
+    element = JSON.parse('{"children": []}')
+    result = @translator.get_value_set_for_element(element)
+    assert_equal "", result["id"]
+    assert_equal "(Not specified)", result["name"]
+  end
+
+  def test_get_value_set_for_element
+    element = JSON.parse('{"children": [{"attrs": {"element": {"id": "1234", "name": "Test"}, "phemaObject": {"className":"ValueSet"}}}]}')
+    result = @translator.get_value_set_for_element(element)
+    assert_equal "1234", result["id"]
+    assert_equal "Test", result["name"]
   end
 end

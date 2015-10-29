@@ -1,5 +1,6 @@
 require 'json'
 require 'hqmf-parser'
+require 'securerandom'
 
 module PhEMA
   module Phenotype
@@ -48,9 +49,23 @@ module PhEMA
 
       def set_phenotype_metadata phenotype, measure
         if phenotype["attrs"] and phenotype["attrs"]["phenotypeData"]
-          measure["title"] = phenotype["attrs"]["phenotypeData"]["name"]
-          measure["description"] = phenotype["attrs"]["phenotypeData"]["description"]
+          phenotypeData = phenotype["attrs"]["phenotypeData"]
+          measure["title"] = phenotypeData["name"]
+          measure["description"] = phenotypeData["description"]
+          measure["measure_id"] = phenotypeData["id"]
+          measure["hqmf_id"] = phenotypeData["id"]
+          measure["hqmf_set_id"] = phenotypeData["id"]
+        else
+          # We don't have a name or description to use, but we can generate GUIDs and use those
+          # for some of the fields instead.
+          measure_id = SecureRandom.uuid
+          set_id = SecureRandom.uuid
+          measure["title"] = "Measure #{measure_id}"
+          measure["measure_id"] = measure_id
+          measure["hqmf_id"] = measure_id
+          measure["hqmf_set_id"] = set_id
         end
+
         measure
       end
 
