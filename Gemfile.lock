@@ -1,5 +1,7 @@
-PATH
-  remote: ../health-data-standards
+GIT
+  remote: https://github.com/phema/health-data-standards.git
+  revision: b18d6e1c06a815d55c7004f918e475cc0dfc931d
+  branch: phema
   specs:
     health-data-standards (3.6.1)
       activesupport (~> 4.1.1)
