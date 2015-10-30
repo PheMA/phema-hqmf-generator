@@ -1,0 +1,793 @@
+<?xml version="1.0" encoding="utf-8"?>
+<QualityMeasureDocument xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:qdm="urn:hhs-qdm:hqmf-r2-extensions:v1">
+  <typeId root="2.16.840.1.113883.1.3" extension="POQM_MT000001UV03" />
+  <templateId>
+    <item root="2.16.840.1.113883.10.20.28.1.1" />
+  </templateId>
+  <id root="2.16.840.1.113883.3.100.1" extension="12345" />
+  <code code="57024-2" codeSystem="2.16.840.1.113883.6.1"/>
+  <title value="PhEMA Demo - T2DM"/>
+  <text value="Patients with a diagnosis of T2DM but not T1DM, and either not prescribed a T2DM medication but having an abnormal diabetes lab (HbA1c &gt;= 6.5% or glucose &gt; 200 mg/dL), or prescribed both insulin and a T2DM medication, but only if the first T2DM prescription precedes the first insulin prescription."/>
+  <statusCode code="completed" />
+  <setId root="2.16.840.1.113883.3.100.1" extension="12345" />
+  <versionNumber value="v1"/>
+  <author typeCode="AUT">
+    <responsibleParty classCode="ASSIGNED" />
+  </author>
+  <custodian typeCode="CST">
+    <responsibleParty classCode="ASSIGNED" />
+  </custodian>
+  <controlVariable>
+    <measurePeriod>
+      <code code="MSRTP" codeSystem="2.16.840.1.113883.3.560">
+        <displayName value="Measurement period"/>
+      </code>
+      <value xsi:type="PIVL_TS">
+        <phase lowClosed="true" highClosed="true">
+                <low value="190001010000" />
+                <high value="201510291349" />
+        </phase>
+      </value>
+    </measurePeriod>
+  </controlVariable>
+    <subjectOf>
+    <measureAttribute classCode="OBS" moodCode="EVN">
+        <code  codeSystem="2.16.840.1.113883.5.4" code="MSRSCORE">
+      <displayName value="Measure Scoring"/>
+ 
+  </code>
+
+        <value xsi:type="CD" codeSystem="2.16.840.1.113883.1.11.20367" code="COHORT">
+      <displayName value="Cohort"/>
+ 
+  </value>
+
+    </measureAttribute>
+  </subjectOf>
+
+    <subjectOf>
+    <measureAttribute classCode="OBS" moodCode="EVN">
+        <code  codeSystem="2.16.840.1.113883.5.4" code="MSRTYPE">
+      <displayName value="Measure Type"/>
+ 
+  </code>
+
+        <value xsi:type="CD" codeSystem="2.16.840.1.113883.1.11.20368" code="OUTCOME">
+      <displayName value="Outcome"/>
+ 
+  </value>
+
+    </measureAttribute>
+  </subjectOf>
+
+    <subjectOf>
+    <measureAttribute classCode="OBS" moodCode="EVN">
+        <code  codeSystem="2.16.840.1.113883.5.4" code="REF">
+      <displayName value="Reference"/>
+ 
+  </code>
+
+        <value  value="Sample document"/>
+
+    </measureAttribute>
+  </subjectOf>
+
+  <component>
+    <dataCriteriaSection>
+      <templateId>
+        <item root="2.16.840.1.113883.10.20.28.2.2" />
+      </templateId>
+      <code code="57025-9" codeSystem="2.16.840.1.113883.6.1"/>
+      <title value="Data Criteria Section"/>
+      <text value="This section describes the data criteria."/>
+            <entry typeCode="DRIV">
+        <localVariableName value="Diagnosis__Active_Type_1_Diabetes_Mellitus__Type_One_Diabetes_Mellitus__T1DM_12"/>
+        <observationCriteria  moodCode="EVN" classCode="OBS">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.1" identifierName="diagnosis, active template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Diagnosis__Active_Type_1_Diabetes_Mellitus__Type_One_Diabetes_Mellitus__T1DM_12"/>
+                    <text value="Diagnosis, Active: Type 1 Diabetes Mellitus, Type One Diabetes Mellitus, T1DM"/>
+          <statusCode code="active"/>
+          
+          
+                    <value xsi:type="CD" valueSet="2.16.840.1.113762.1.4.1053.1">
+              <displayName value="Type 1 Diabetes Mellitus, Type One Diabetes Mellitus, T1DM"/>
+          </value>
+
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="OBS">
+              <id root="2.16.840.1.113883.3.100.1" extension="diagnosis"/>
+            </criteriaReference>
+          </definition>
+          
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension="Diagnosis__Active_Type_1_Diabetes_Mellitus__Type_One_Diabetes_Mellitus__T1DM_12"/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </observationCriteria>
+      </entry>
+
+            <entry typeCode="DRIV">
+        <localVariableName value="Diagnosis__Active_Type_2_Diabetes_Mellitus__Type_Two_Diabetes_Mellitus_65"/>
+        <observationCriteria  moodCode="EVN" classCode="OBS">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.1" identifierName="diagnosis, active template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Diagnosis__Active_Type_2_Diabetes_Mellitus__Type_Two_Diabetes_Mellitus_65"/>
+                    <text value="Diagnosis, Active: Type 2 Diabetes Mellitus, Type Two Diabetes Mellitus"/>
+          <statusCode code="active"/>
+          
+          
+                    <value xsi:type="CD" valueSet="2.16.840.1.113762.1.4.1053.2">
+              <displayName value="Type 2 Diabetes Mellitus, Type Two Diabetes Mellitus"/>
+          </value>
+
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="OBS">
+              <id root="2.16.840.1.113883.3.100.1" extension="diagnosis"/>
+            </criteriaReference>
+          </definition>
+          
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension="Diagnosis__Active_Type_2_Diabetes_Mellitus__Type_Two_Diabetes_Mellitus_65"/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </observationCriteria>
+      </entry>
+
+            <entry typeCode="DRIV">
+        <localVariableName value="Medication__Active_T2DM_Medications__Type_2_Diabetes_Mellitus__RXNORM_72"/>
+        <substanceAdministrationCriteria moodCode="EVN" classCode="SBADM">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.44" identifierName="medication, active template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_T2DM_Medications__Type_2_Diabetes_Mellitus__RXNORM_72"/>
+                    <text value="Medication, Active: T2DM Medications (Type 2 Diabetes Mellitus) RXNORM"/>
+          <statusCode code="active"/>
+          
+          
+          <participation typeCode="CSM">
+            <role classCode="THER">
+                        <code valueSet="2.16.840.1.113762.1.4.1053.4">
+              <displayName value="T2DM Medications (Type 2 Diabetes Mellitus) RXNORM"/>
+          </code>
+
+            </role>
+          </participation>
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="SBADM">
+              <id root="2.16.840.1.113883.3.100.1" extension="medication"/>
+            </criteriaReference>
+          </definition>
+                    <temporallyRelatedInformation typeCode="SBS">
+
+            <qdm:temporalInformation precisionUnit="min">
+              
+                <qdm:delta   >
+<low nullFlavor="NINF"/><high nullFlavor="PINF"/>  </qdm:delta>
+
+            </qdm:temporalInformation>
+
+                        <criteriaReference moodCode="EVN" classCode="SBADM">
+              <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_T1DM_Medications___Type_1_Diabetes_Mellitus__RXNORM_79"/>
+            </criteriaReference>
+
+          </temporallyRelatedInformation>
+
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_T2DM_Medications__Type_2_Diabetes_Mellitus__RXNORM_72"/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </substanceAdministrationCriteria>
+      </entry>
+
+            <entry typeCode="DRIV">
+        <localVariableName value="Medication__Active_T1DM_Medications___Type_1_Diabetes_Mellitus__RXNORM_79"/>
+        <substanceAdministrationCriteria moodCode="EVN" classCode="SBADM">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.44" identifierName="medication, active template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_T1DM_Medications___Type_1_Diabetes_Mellitus__RXNORM_79"/>
+                    <text value="Medication, Active: T1DM Medications. (Type 1 Diabetes Mellitus) RXNORM"/>
+          <statusCode code="active"/>
+          
+          
+          <participation typeCode="CSM">
+            <role classCode="THER">
+                        <code valueSet="2.16.840.1.113762.1.4.1053.3">
+              <displayName value="T1DM Medications. (Type 1 Diabetes Mellitus) RXNORM"/>
+          </code>
+
+            </role>
+          </participation>
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="SBADM">
+              <id root="2.16.840.1.113883.3.100.1" extension="medication"/>
+            </criteriaReference>
+          </definition>
+          
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_T1DM_Medications___Type_1_Diabetes_Mellitus__RXNORM_79"/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </substanceAdministrationCriteria>
+      </entry>
+
+            <entry typeCode="DRIV">
+        <localVariableName value="Medication__Active_T1DM_Medications___Type_1_Diabetes_Mellitus__RXNORM_40"/>
+        <substanceAdministrationCriteria moodCode="EVN" classCode="SBADM">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.44" identifierName="medication, active template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_T1DM_Medications___Type_1_Diabetes_Mellitus__RXNORM_40"/>
+                    <text value="Medication, Active: T1DM Medications. (Type 1 Diabetes Mellitus) RXNORM"/>
+          <statusCode code="active"/>
+          
+          
+          <participation typeCode="CSM">
+            <role classCode="THER">
+                        <code valueSet="2.16.840.1.113762.1.4.1053.3">
+              <displayName value="T1DM Medications. (Type 1 Diabetes Mellitus) RXNORM"/>
+          </code>
+
+            </role>
+          </participation>
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="SBADM">
+              <id root="2.16.840.1.113883.3.100.1" extension="medication"/>
+            </criteriaReference>
+          </definition>
+          
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_T1DM_Medications___Type_1_Diabetes_Mellitus__RXNORM_40"/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </substanceAdministrationCriteria>
+      </entry>
+
+            <entry typeCode="DRIV">
+        <localVariableName value="Medication__Active_Anaphylactic_Reaction_to_Rotavirus_Vaccine_33"/>
+        <substanceAdministrationCriteria moodCode="EVN" classCode="SBADM">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.44" identifierName="medication, active template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_Anaphylactic_Reaction_to_Rotavirus_Vaccine_33"/>
+                    <text value="Medication, Active: Anaphylactic Reaction to Rotavirus Vaccine"/>
+          <statusCode code="active"/>
+          
+          
+          <participation typeCode="CSM">
+            <role classCode="THER">
+                        <code valueSet="2.16.840.1.113883.3.464.1003.199.12.1021">
+              <displayName value="Anaphylactic Reaction to Rotavirus Vaccine"/>
+          </code>
+
+            </role>
+          </participation>
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="SBADM">
+              <id root="2.16.840.1.113883.3.100.1" extension="medication"/>
+            </criteriaReference>
+          </definition>
+          
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_Anaphylactic_Reaction_to_Rotavirus_Vaccine_33"/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </substanceAdministrationCriteria>
+      </entry>
+
+            <entry typeCode="DRIV">
+        <localVariableName value="Laboratory_Test__Performed_Glucose_blood_serum_plasma_19"/>
+        <observationCriteria moodCode="EVN" classCode="OBS">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.42" identifierName="laboratory test, performed template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Laboratory_Test__Performed_Glucose_blood_serum_plasma_19"/>
+                    <code xsi:type="CD" valueSet="2.16.840.1.113762.1.4.1104.6">
+              <displayName value="Glucose blood serum plasma"/>
+          </code>
+
+                    <text value="Laboratory Test, Performed: Glucose blood serum plasma"/>
+          <statusCode code="performed"/>
+          
+          
+            <value xsi:type="IVL_PQ"  >
+  <low  value="200" unit="mg/dL"/>
+<high nullFlavor="PINF"/>  </value>
+
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="OBS">
+              <id root="2.16.840.1.113883.3.100.1" extension="laboratory_test"/>
+            </criteriaReference>
+          </definition>
+          
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension="Laboratory_Test__Performed_Glucose_blood_serum_plasma_19"/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </observationCriteria>
+      </entry>
+
+            <entry typeCode="DRIV">
+        <localVariableName value="Laboratory_Test__Performed_Hemoglobin_blood_serum_plasma_26"/>
+        <observationCriteria moodCode="EVN" classCode="OBS">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.42" identifierName="laboratory test, performed template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Laboratory_Test__Performed_Hemoglobin_blood_serum_plasma_26"/>
+                    <code xsi:type="CD" valueSet="2.16.840.1.113762.1.4.1104.4">
+              <displayName value="Hemoglobin blood serum plasma"/>
+          </code>
+
+                    <text value="Laboratory Test, Performed: Hemoglobin blood serum plasma"/>
+          <statusCode code="performed"/>
+          
+          
+            <value xsi:type="IVL_PQ"  lowClosed="true">
+  <low  value="6.5" unit="%"/>
+<high nullFlavor="PINF"/>  </value>
+
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="OBS">
+              <id root="2.16.840.1.113883.3.100.1" extension="laboratory_test"/>
+            </criteriaReference>
+          </definition>
+          
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension="Laboratory_Test__Performed_Hemoglobin_blood_serum_plasma_26"/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </observationCriteria>
+      </entry>
+
+            <entry typeCode="DRIV">
+        <localVariableName value="Diagnosis__Active_Type_1_Diabetes_Mellitus__Type_One_Diabetes_Mellitus__T1DM_12"/>
+        <observationCriteria  moodCode="EVN" classCode="OBS">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.1" identifierName="diagnosis, active template"/>
+            <item root="2.16.840.1.113883.3.100.1.1" identifierName="Source data criteria template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Diagnosis__Active_Type_1_Diabetes_Mellitus__Type_One_Diabetes_Mellitus__T1DM_12"/>
+                    <text value="Diagnosis, Active: Type 1 Diabetes Mellitus, Type One Diabetes Mellitus, T1DM"/>
+          <statusCode code="active"/>
+          
+          
+                    <value xsi:type="CD" valueSet="2.16.840.1.113762.1.4.1053.1">
+              <displayName value="Type 1 Diabetes Mellitus, Type One Diabetes Mellitus, T1DM"/>
+          </value>
+
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="OBS">
+              <id root="2.16.840.1.113883.3.100.1" extension="diagnosis"/>
+            </criteriaReference>
+          </definition>
+          
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension=""/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </observationCriteria>
+      </entry>
+
+            <entry typeCode="DRIV">
+        <localVariableName value="Diagnosis__Active_Type_2_Diabetes_Mellitus__Type_Two_Diabetes_Mellitus_65"/>
+        <observationCriteria  moodCode="EVN" classCode="OBS">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.1" identifierName="diagnosis, active template"/>
+            <item root="2.16.840.1.113883.3.100.1.1" identifierName="Source data criteria template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Diagnosis__Active_Type_2_Diabetes_Mellitus__Type_Two_Diabetes_Mellitus_65"/>
+                    <text value="Diagnosis, Active: Type 2 Diabetes Mellitus, Type Two Diabetes Mellitus"/>
+          <statusCode code="active"/>
+          
+          
+                    <value xsi:type="CD" valueSet="2.16.840.1.113762.1.4.1053.2">
+              <displayName value="Type 2 Diabetes Mellitus, Type Two Diabetes Mellitus"/>
+          </value>
+
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="OBS">
+              <id root="2.16.840.1.113883.3.100.1" extension="diagnosis"/>
+            </criteriaReference>
+          </definition>
+          
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension=""/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </observationCriteria>
+      </entry>
+
+            <entry typeCode="DRIV">
+        <localVariableName value="Medication__Active_T2DM_Medications__Type_2_Diabetes_Mellitus__RXNORM_72"/>
+        <substanceAdministrationCriteria moodCode="EVN" classCode="SBADM">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.44" identifierName="medication, active template"/>
+            <item root="2.16.840.1.113883.3.100.1.1" identifierName="Source data criteria template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_T2DM_Medications__Type_2_Diabetes_Mellitus__RXNORM_72"/>
+                    <text value="Medication, Active: T2DM Medications (Type 2 Diabetes Mellitus) RXNORM"/>
+          <statusCode code="active"/>
+          
+          
+          <participation typeCode="CSM">
+            <role classCode="THER">
+                        <code valueSet="2.16.840.1.113762.1.4.1053.4">
+              <displayName value="T2DM Medications (Type 2 Diabetes Mellitus) RXNORM"/>
+          </code>
+
+            </role>
+          </participation>
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="SBADM">
+              <id root="2.16.840.1.113883.3.100.1" extension="medication"/>
+            </criteriaReference>
+          </definition>
+                    <temporallyRelatedInformation typeCode="SBS">
+
+            <qdm:temporalInformation precisionUnit="min">
+              
+                <qdm:delta   >
+<low nullFlavor="NINF"/><high nullFlavor="PINF"/>  </qdm:delta>
+
+            </qdm:temporalInformation>
+
+                        <criteriaReference moodCode="EVN" classCode="SBADM">
+              <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_T1DM_Medications___Type_1_Diabetes_Mellitus__RXNORM_79"/>
+            </criteriaReference>
+
+          </temporallyRelatedInformation>
+
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension=""/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </substanceAdministrationCriteria>
+      </entry>
+
+            <entry typeCode="DRIV">
+        <localVariableName value="Medication__Active_T1DM_Medications___Type_1_Diabetes_Mellitus__RXNORM_79"/>
+        <substanceAdministrationCriteria moodCode="EVN" classCode="SBADM">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.44" identifierName="medication, active template"/>
+            <item root="2.16.840.1.113883.3.100.1.1" identifierName="Source data criteria template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_T1DM_Medications___Type_1_Diabetes_Mellitus__RXNORM_79"/>
+                    <text value="Medication, Active: T1DM Medications. (Type 1 Diabetes Mellitus) RXNORM"/>
+          <statusCode code="active"/>
+          
+          
+          <participation typeCode="CSM">
+            <role classCode="THER">
+                        <code valueSet="2.16.840.1.113762.1.4.1053.3">
+              <displayName value="T1DM Medications. (Type 1 Diabetes Mellitus) RXNORM"/>
+          </code>
+
+            </role>
+          </participation>
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="SBADM">
+              <id root="2.16.840.1.113883.3.100.1" extension="medication"/>
+            </criteriaReference>
+          </definition>
+          
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension=""/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </substanceAdministrationCriteria>
+      </entry>
+
+            <entry typeCode="DRIV">
+        <localVariableName value="Medication__Active_T1DM_Medications___Type_1_Diabetes_Mellitus__RXNORM_40"/>
+        <substanceAdministrationCriteria moodCode="EVN" classCode="SBADM">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.44" identifierName="medication, active template"/>
+            <item root="2.16.840.1.113883.3.100.1.1" identifierName="Source data criteria template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_T1DM_Medications___Type_1_Diabetes_Mellitus__RXNORM_40"/>
+                    <text value="Medication, Active: T1DM Medications. (Type 1 Diabetes Mellitus) RXNORM"/>
+          <statusCode code="active"/>
+          
+          
+          <participation typeCode="CSM">
+            <role classCode="THER">
+                        <code valueSet="2.16.840.1.113762.1.4.1053.3">
+              <displayName value="T1DM Medications. (Type 1 Diabetes Mellitus) RXNORM"/>
+          </code>
+
+            </role>
+          </participation>
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="SBADM">
+              <id root="2.16.840.1.113883.3.100.1" extension="medication"/>
+            </criteriaReference>
+          </definition>
+          
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension=""/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </substanceAdministrationCriteria>
+      </entry>
+
+            <entry typeCode="DRIV">
+        <localVariableName value="Medication__Active_Anaphylactic_Reaction_to_Rotavirus_Vaccine_33"/>
+        <substanceAdministrationCriteria moodCode="EVN" classCode="SBADM">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.44" identifierName="medication, active template"/>
+            <item root="2.16.840.1.113883.3.100.1.1" identifierName="Source data criteria template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_Anaphylactic_Reaction_to_Rotavirus_Vaccine_33"/>
+                    <text value="Medication, Active: Anaphylactic Reaction to Rotavirus Vaccine"/>
+          <statusCode code="active"/>
+          
+          
+          <participation typeCode="CSM">
+            <role classCode="THER">
+                        <code valueSet="2.16.840.1.113883.3.464.1003.199.12.1021">
+              <displayName value="Anaphylactic Reaction to Rotavirus Vaccine"/>
+          </code>
+
+            </role>
+          </participation>
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="SBADM">
+              <id root="2.16.840.1.113883.3.100.1" extension="medication"/>
+            </criteriaReference>
+          </definition>
+          
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension=""/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </substanceAdministrationCriteria>
+      </entry>
+
+            <entry typeCode="DRIV">
+        <localVariableName value="Laboratory_Test__Performed_Glucose_blood_serum_plasma_19"/>
+        <observationCriteria moodCode="EVN" classCode="OBS">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.42" identifierName="laboratory test, performed template"/>
+            <item root="2.16.840.1.113883.3.100.1.1" identifierName="Source data criteria template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Laboratory_Test__Performed_Glucose_blood_serum_plasma_19"/>
+                    <code xsi:type="CD" valueSet="2.16.840.1.113762.1.4.1104.6">
+              <displayName value="Glucose blood serum plasma"/>
+          </code>
+
+                    <text value="Laboratory Test, Performed: Glucose blood serum plasma"/>
+          <statusCode code="performed"/>
+          
+          
+            <value xsi:type="IVL_PQ"  >
+  <low  value="200" unit="mg/dL"/>
+<high nullFlavor="PINF"/>  </value>
+
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="OBS">
+              <id root="2.16.840.1.113883.3.100.1" extension="laboratory_test"/>
+            </criteriaReference>
+          </definition>
+          
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension=""/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </observationCriteria>
+      </entry>
+
+            <entry typeCode="DRIV">
+        <localVariableName value="Laboratory_Test__Performed_Hemoglobin_blood_serum_plasma_26"/>
+        <observationCriteria moodCode="EVN" classCode="OBS">
+                    <templateId>
+            <item root="2.16.840.1.113883.10.20.28.3.42" identifierName="laboratory test, performed template"/>
+            <item root="2.16.840.1.113883.3.100.1.1" identifierName="Source data criteria template"/>
+          </templateId>
+
+          <id root="2.16.840.1.113883.3.100.1" extension="Laboratory_Test__Performed_Hemoglobin_blood_serum_plasma_26"/>
+                    <code xsi:type="CD" valueSet="2.16.840.1.113762.1.4.1104.4">
+              <displayName value="Hemoglobin blood serum plasma"/>
+          </code>
+
+                    <text value="Laboratory Test, Performed: Hemoglobin blood serum plasma"/>
+          <statusCode code="performed"/>
+          
+          
+            <value xsi:type="IVL_PQ"  lowClosed="true">
+  <low  value="6.5" unit="%"/>
+<high nullFlavor="PINF"/>  </value>
+
+          <definition>
+            <criteriaReference moodCode="EVN" classCode="OBS">
+              <id root="2.16.840.1.113883.3.100.1" extension="laboratory_test"/>
+            </criteriaReference>
+          </definition>
+          
+                    <outboundRelationship typeCode="SUBJ">
+            <subsetCode code="SOURCE"/>
+            <criteriaReference classCode="OBS" moodCode="EVN">
+              <id root="2.16.840.1.113883.3.100.1" extension=""/>
+            </criteriaReference>
+          </outboundRelationship>
+          
+          
+        </observationCriteria>
+      </entry>
+
+    </dataCriteriaSection>
+  </component>
+  <component>
+    <populationCriteriaSection>
+      <templateId>
+        <item root="2.16.840.1.113883.10.20.28.2.1"/>
+      </templateId>
+      <id root="2.16.840.1.113883.3.100.1" extension="Population0"/>
+      <code code="57026-7" codeSystem="2.16.840.1.113883.6.1"/>
+      <title value=""/>
+      <text value="This section describes the Initial Patient Population, Numerator, Denominator, Denominator Exceptions, and Measure Populations"/>
+            <component typeCode="COMP">
+        <initialPopulationCriteria  classCode="OBS" moodCode="EVN" isCriterionInd="true">
+          <id root="c75181d0-73eb-11de-8a39-0800200c9a66"
+            extension=""/>
+          <code codeSystem="2.16.840.1.113883.5.1063"
+              codeSystemName="HL7 Observation Value"
+              code="IPP">
+            <displayName value="Initial Patient Population"/>
+          </code>
+          <precondition typeCode="PRCN">
+  <allTrue>
+    <precondition typeCode="PRCN">
+  <allFalse>
+    <precondition typeCode="PRCN">
+    <criteriaReference moodCode="EVN" classCode="OBS">
+      <id root="2.16.840.1.113883.3.100.1" extension="Diagnosis__Active_Type_1_Diabetes_Mellitus__Type_One_Diabetes_Mellitus__T1DM_12"/>
+    </criteriaReference>
+</precondition>
+  </allFalse>
+</precondition>
+    <precondition typeCode="PRCN">
+  <atLeastOneTrue>
+    <precondition typeCode="PRCN">
+  <allTrue>
+    <precondition typeCode="PRCN">
+    <criteriaReference moodCode="EVN" classCode="OBS">
+      <id root="2.16.840.1.113883.3.100.1" extension="Diagnosis__Active_Type_2_Diabetes_Mellitus__Type_Two_Diabetes_Mellitus_65"/>
+    </criteriaReference>
+</precondition>
+    <precondition typeCode="PRCN">
+    <criteriaReference moodCode="EVN" classCode="SBADM">
+      <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_T2DM_Medications__Type_2_Diabetes_Mellitus__RXNORM_72"/>
+    </criteriaReference>
+</precondition>
+    <precondition typeCode="PRCN">
+    <criteriaReference moodCode="EVN" classCode="SBADM">
+      <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_T1DM_Medications___Type_1_Diabetes_Mellitus__RXNORM_79"/>
+    </criteriaReference>
+</precondition>
+  </allTrue>
+</precondition>
+    <precondition typeCode="PRCN">
+  <allTrue>
+    <precondition typeCode="PRCN">
+  <allFalse>
+    <precondition typeCode="PRCN">
+    <criteriaReference moodCode="EVN" classCode="SBADM">
+      <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_T1DM_Medications___Type_1_Diabetes_Mellitus__RXNORM_40"/>
+    </criteriaReference>
+</precondition>
+  </allFalse>
+</precondition>
+    <precondition typeCode="PRCN">
+    <criteriaReference moodCode="EVN" classCode="SBADM">
+      <id root="2.16.840.1.113883.3.100.1" extension="Medication__Active_Anaphylactic_Reaction_to_Rotavirus_Vaccine_33"/>
+    </criteriaReference>
+</precondition>
+    <precondition typeCode="PRCN">
+  <atLeastOneTrue>
+    <precondition typeCode="PRCN">
+    <criteriaReference moodCode="EVN" classCode="OBS">
+      <id root="2.16.840.1.113883.3.100.1" extension="Laboratory_Test__Performed_Glucose_blood_serum_plasma_19"/>
+    </criteriaReference>
+</precondition>
+    <precondition typeCode="PRCN">
+    <criteriaReference moodCode="EVN" classCode="OBS">
+      <id root="2.16.840.1.113883.3.100.1" extension="Laboratory_Test__Performed_Hemoglobin_blood_serum_plasma_26"/>
+    </criteriaReference>
+</precondition>
+  </atLeastOneTrue>
+</precondition>
+  </allTrue>
+</precondition>
+  </atLeastOneTrue>
+</precondition>
+  </allTrue>
+</precondition>
+        </initialPopulationCriteria>
+      </component>
+
+      
+      
+      
+      
+    </populationCriteriaSection>
+  </component>
+ 
+</QualityMeasureDocument>
