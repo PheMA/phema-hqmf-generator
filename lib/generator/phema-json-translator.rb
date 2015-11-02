@@ -230,11 +230,9 @@ module PhEMA
           if operator[0] == 'L' or operator[0] == '<'
             range["high"] = { "type" => "PQ", "value" => valueLow, "unit" => units }
             range["high"]["inclusive?"] = (operator == 'LE' or operator == '<=')
-            #range["low"] = { "null_flavor" => "NINF", "inclusive?" => false } unless is_temporal
           elsif  operator[0] == 'G' or operator[0] == '>'
             range["low"] = { "type" => "PQ", "value" => valueLow, "unit" => units }
             range["low"]["inclusive?"] = (operator == 'GE' or operator == '>=')
-            #range["high"] = { "null_flavor" => "PINF", "inclusive?" => false } unless is_temporal
           else
             range = {}
           end
@@ -283,6 +281,12 @@ module PhEMA
               item
             end
           }
+
+          if (hqmf_type == HQMF::Precondition::ALL_FALSE)
+            operator_definition["conjunction_code"] = HQMF::Precondition::NEGATIONS[hqmf_type]
+            operator_definition["negation"] = true
+          end
+
           hqmf_operators << operator_definition
         end
 
