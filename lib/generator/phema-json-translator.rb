@@ -282,6 +282,9 @@ module PhEMA
             end
           }
 
+          # Typically in example HDS code, the "all false" conjunction is flipped and negated.  We will follow
+          # that convention here (in part to support the KNIME generator), although in practice "all false"
+          # should be interpreted.
           if (hqmf_type == HQMF::Precondition::ALL_FALSE)
             operator_definition["conjunction_code"] = HQMF::Precondition::NEGATIONS[hqmf_type]
             operator_definition["negation"] = true
