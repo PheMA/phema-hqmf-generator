@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/phema/health-data-standards.git
-  revision: b18d6e1c06a815d55c7004f918e475cc0dfc931d
+  revision: 9cb81d5c6666ed3a30eaf8fd2645cb907a830ec8
   branch: phema
   specs:
     health-data-standards (3.6.1)
@@ -72,7 +72,7 @@ GEM
       bson (~> 3.0)
       connection_pool (~> 2.0)
       optionable (~> 0.2.0)
-    netrc (0.10.3)
+    netrc (0.11.0)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     optionable (0.2.0)

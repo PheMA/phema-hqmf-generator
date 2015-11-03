@@ -25,7 +25,7 @@
       <value xsi:type="PIVL_TS">
         <phase lowClosed="true" highClosed="true">
                 <low value="190001010000" />
-                <high value="201511031157" />
+                <high value="201511031239" />
         </phase>
       </value>
     </measurePeriod>
@@ -159,11 +159,13 @@
           
           
           <participation typeCode="CSM">
-            <role classCode="THER">
-                        <code valueSet="2.16.840.1.113762.1.4.1053.4">
+            <role classCode="MANU">
+                <playingMaterial classCode="MMAT" determinerCode="KIND">
+                            <code valueSet="2.16.840.1.113762.1.4.1053.4">
               <displayName value="T2DM Medications (Type 2 Diabetes Mellitus)"/>
           </code>
 
+                </playingMaterial>
             </role>
           </participation>
           <definition>
@@ -210,11 +212,13 @@
           
           
           <participation typeCode="CSM">
-            <role classCode="THER">
-                        <code valueSet="2.16.840.1.113762.1.4.1053.3">
+            <role classCode="MANU">
+                <playingMaterial classCode="MMAT" determinerCode="KIND">
+                            <code valueSet="2.16.840.1.113762.1.4.1053.3">
               <displayName value="T1DM Medications. (Type 1 Diabetes Mellitus)"/>
           </code>
 
+                </playingMaterial>
             </role>
           </participation>
           <definition>
@@ -247,11 +251,13 @@
           
           
           <participation typeCode="CSM">
-            <role classCode="THER">
-                        <code valueSet="2.16.840.1.113762.1.4.1053.3">
+            <role classCode="MANU">
+                <playingMaterial classCode="MMAT" determinerCode="KIND">
+                            <code valueSet="2.16.840.1.113762.1.4.1053.3">
               <displayName value="T1DM Medications. (Type 1 Diabetes Mellitus)"/>
           </code>
 
+                </playingMaterial>
             </role>
           </participation>
           <definition>
@@ -284,11 +290,13 @@
           
           
           <participation typeCode="CSM">
-            <role classCode="THER">
-                        <code valueSet="2.16.840.1.113762.1.4.1053.4">
+            <role classCode="MANU">
+                <playingMaterial classCode="MMAT" determinerCode="KIND">
+                            <code valueSet="2.16.840.1.113762.1.4.1053.4">
               <displayName value="T2DM Medications (Type 2 Diabetes Mellitus)"/>
           </code>
 
+                </playingMaterial>
             </role>
           </participation>
           <definition>
@@ -464,11 +472,13 @@
           
           
           <participation typeCode="CSM">
-            <role classCode="THER">
-                        <code valueSet="2.16.840.1.113762.1.4.1053.4">
+            <role classCode="MANU">
+                <playingMaterial classCode="MMAT" determinerCode="KIND">
+                            <code valueSet="2.16.840.1.113762.1.4.1053.4">
               <displayName value="T2DM Medications (Type 2 Diabetes Mellitus)"/>
           </code>
 
+                </playingMaterial>
             </role>
           </participation>
           <definition>
@@ -516,11 +526,13 @@
           
           
           <participation typeCode="CSM">
-            <role classCode="THER">
-                        <code valueSet="2.16.840.1.113762.1.4.1053.3">
+            <role classCode="MANU">
+                <playingMaterial classCode="MMAT" determinerCode="KIND">
+                            <code valueSet="2.16.840.1.113762.1.4.1053.3">
               <displayName value="T1DM Medications. (Type 1 Diabetes Mellitus)"/>
           </code>
 
+                </playingMaterial>
             </role>
           </participation>
           <definition>
@@ -554,11 +566,13 @@
           
           
           <participation typeCode="CSM">
-            <role classCode="THER">
-                        <code valueSet="2.16.840.1.113762.1.4.1053.3">
+            <role classCode="MANU">
+                <playingMaterial classCode="MMAT" determinerCode="KIND">
+                            <code valueSet="2.16.840.1.113762.1.4.1053.3">
               <displayName value="T1DM Medications. (Type 1 Diabetes Mellitus)"/>
           </code>
 
+                </playingMaterial>
             </role>
           </participation>
           <definition>
@@ -592,11 +606,13 @@
           
           
           <participation typeCode="CSM">
-            <role classCode="THER">
-                        <code valueSet="2.16.840.1.113762.1.4.1053.4">
+            <role classCode="MANU">
+                <playingMaterial classCode="MMAT" determinerCode="KIND">
+                            <code valueSet="2.16.840.1.113762.1.4.1053.4">
               <displayName value="T2DM Medications (Type 2 Diabetes Mellitus)"/>
           </code>
 
+                </playingMaterial>
             </role>
           </participation>
           <definition>
