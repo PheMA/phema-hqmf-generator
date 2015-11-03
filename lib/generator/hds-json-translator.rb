@@ -117,6 +117,12 @@ module PhEMA
           "effective_time" => effectiveTime
         }
 
+        # If the value is a value set that matches the code_list_id, it's duplicative and we
+        # can just remove it.
+        if !result["code_list_id"].nil? && !result["value"].nil? && !result["value"]["code_list_id"].nil? && result["code_list_id"] == result["value"]["code_list_id"]
+          result.delete("value")
+        end
+
         unless temporalReferences.nil?
           result["temporal_references"] = temporalReferences
         end

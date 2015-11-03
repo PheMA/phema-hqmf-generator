@@ -25,7 +25,7 @@
       <value xsi:type="PIVL_TS">
         <phase lowClosed="true" highClosed="true">
                 <low value="190001010000" />
-                <high value="201511021055" />
+                <high value="201511031157" />
         </phase>
       </value>
     </measurePeriod>
