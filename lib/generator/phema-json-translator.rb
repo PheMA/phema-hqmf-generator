@@ -42,7 +42,6 @@ module PhEMA
           }
         }
         measure_definition = set_phenotype_metadata(phenotype, measure_definition)
-
         measure = HQMF::Document.from_json(measure_definition)
         measure
       end
@@ -171,18 +170,20 @@ module PhEMA
 
         temporal_references = []
         connections.each do |connection|
-          start_id = connection["attrs"]["connectors"]["start"]["id"]
-          # Am I the start or the end?  If I'm the end, skip because whoever the start element is will define the relationship
-          matching_connector = element["children"].find { |ch| ch["id"] == start_id}
-          if matching_connector
-            end_element = @id_element_map.find { |key, val| val["children"].any?{ |ch| ch["id"] == connection["attrs"]["connectors"]["end"]["id"] } if val["children"] }
-            unless end_element.nil?
-              reference = { "reference" => end_element[1]["hds_name"], "type" => PhEMA::HealthDataStandards::QDM_HQMF_TEMPORAL_TYPE_MAPPING[connection["attrs"]["element"]["uri"]] }
-              if connection["attrs"]["element"]["timeRange"] and connection["attrs"]["element"]["timeRange"]["comparison"]
-                time_range = connection["attrs"]["element"]["timeRange"]
-                reference["range"] = build_range_hash(true, time_range["comparison"], time_range["start"]["units"], time_range["start"]["value"], time_range["end"]["value"])
+          unless connection.nil?
+            start_id = connection["attrs"]["connectors"]["start"]["id"]
+            # Am I the start or the end?  If I'm the end, skip because whoever the start element is will define the relationship
+            matching_connector = element["children"].find { |ch| ch["id"] == start_id}
+            if matching_connector
+              end_element = @id_element_map.find { |key, val| val["children"].any?{ |ch| ch["id"] == connection["attrs"]["connectors"]["end"]["id"] } if val["children"] }
+              unless end_element.nil?
+                reference = { "reference" => end_element[1]["hds_name"], "type" => PhEMA::HealthDataStandards::QDM_HQMF_TEMPORAL_TYPE_MAPPING[connection["attrs"]["element"]["uri"]] }
+                if connection["attrs"]["element"]["timeRange"] and connection["attrs"]["element"]["timeRange"]["comparison"]
+                  time_range = connection["attrs"]["element"]["timeRange"]
+                  reference["range"] = build_range_hash(true, time_range["comparison"], time_range["start"]["units"], time_range["start"]["value"], time_range["end"]["value"])
+                end
+                temporal_references << reference
               end
-              temporal_references << reference
             end
           end
         end
@@ -253,14 +254,12 @@ module PhEMA
           items.each { |item| contained_elements << @id_element_map[item["id"]] }
           contained_elements.compact!
           hqmf_operators = items.map {|item| { "id" => item["id"], "reference" => item["hds_name"] }}
-          puts hqmf_operators
           return hqmf_operators
         end
 
         operators.each do |operator|
           # Get the identifiers of elements that are in this logical operator
           element_ids = operator["attrs"]["phemaObject"]["containedElements"].map{ |el| el["id"] }
-
           # Search the overall elements by these IDs
           contained_elements = []
           element_ids.each { |id| contained_elements << @id_element_map[id] }
@@ -271,7 +270,9 @@ module PhEMA
           operator_definition = {
             "id" => operator["id"],
             "conjunction_code" => hqmf_type,
-            "preconditions" => contained_elements.map do |el|
+            # We may end up with connections in our collections, just based on how we store them.  We don't want
+            # to process them in this context, so we filter them out.
+            "preconditions" => contained_elements.find_all{|el| el["className"] != "PhemaConnection"}.map do |el|
               item = { "id" => el["id"] }
               if el["hds_name"]
                 item["reference"] = el["hds_name"]
