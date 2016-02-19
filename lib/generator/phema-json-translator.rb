@@ -41,7 +41,6 @@ module PhEMA
             }
           }
         }
-        puts measure_definition
         measure_definition = set_phenotype_metadata(phenotype, measure_definition)
         measure = HQMF::Document.from_json(measure_definition)
         measure
@@ -127,14 +126,15 @@ module PhEMA
       def build_subsets_for_element element
         return [] if element.nil?
         phemaObj = element["attrs"]["phemaObject"]
-        value = phemaObj["attributes"]["Value"]
         hqmf = PhEMA::HealthDataStandards::QDM_HQMF_SUBSET_FUNCTIONS.detect { |x| x[:id] == element["attrs"]["element"]["uri"] }
-        [
-          {
-            "type" => hqmf[:type],
-            "value" => build_range_hash(true, value["operator"], nil, value["valueLow"], value["valueHigh"])
-          }
-        ]
+        subset = { "type" => hqmf[:type] }
+
+        if phemaObj and phemaObj["attributes"]
+          value = phemaObj["attributes"]["Value"]
+          subset["value"] = build_range_hash(true, value["operator"], nil, value["valueLow"], value["valueHigh"])
+        end
+
+        [ subset ]
       end
 
       # Construct the appropriate value structure for an element
