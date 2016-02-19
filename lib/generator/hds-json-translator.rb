@@ -94,6 +94,27 @@ module PhEMA
         }
       end
 
+      # Determine if the element is a function or operator that is used as a subset attribugte for a
+      # data element.
+      def is_subset_function qdmType
+        QDM_HQMF_SUBSET_FUNCTIONS.any?{ |x| x[:id] == qdmType }
+      end
+
+      # Some of the functions need special handling.  They are represented as a simple function (e.g. Age At)
+      # but in the HQMF need to be translated to a birthdate element with a temporal reference.
+      def is_age_function_reference qdmType
+        QDM_HQMF_AGE_FUNCTIONS.any? { |x| x[:id] == qdmType }
+      end
+
+      def get_value_set_oid(qdmType, valueSet)
+        if is_age_function_reference(qdmType)
+          "2.16.840.1.113883.3.560.100.4"  # Birthdate
+        else
+          valueSet["id"]
+        end
+      end
+
+      # qdmType - URI (from Data Element Repository) to represent the type
       def data_criteria(qdmType, valueSet, value, attributes, effectiveTime, isNegated, isVariable, sourceId, temporalReferences, subsets)
         hqmf = QDM_HQMF_MAPPING.detect { |x| x[:id] == qdmType }
         unless (hqmf)
@@ -104,7 +125,7 @@ module PhEMA
           "value" => value,
           "title" => valueSet["name"],
           "display_name" => valueSet["name"],
-          "code_list_id" => valueSet["id"],
+          "code_list_id" => get_value_set_oid(qdmType, valueSet),
           "definition" => hqmf[:definition],
           "description" => hqmf[:description] + ": " + valueSet["name"],
           "hard_status" => false,
@@ -117,10 +138,21 @@ module PhEMA
           "effective_time" => effectiveTime
         }
 
+        is_age_function = is_age_function_reference(qdmType)
+
         # If the value is a value set that matches the code_list_id, it's duplicative and we
         # can just remove it.
         if !result["code_list_id"].nil? && !result["value"].nil? && !result["value"]["code_list_id"].nil? && result["code_list_id"] == result["value"]["code_list_id"]
           result.delete("value")
+        end
+
+        # If this is an age function, we have some special manipulation to do
+        if is_age_function
+          result["title"] = hqmf[:description]
+          result["display_name"] = hqmf[:description]
+          result.delete("value")
+          result.delete("status")
+          result["inline_code_list"] = { "LOINC" => [ "21112-8" ] }  # Birth date
         end
 
         unless temporalReferences.nil?
@@ -156,7 +188,8 @@ module PhEMA
       def generate_entity_name(qdmType, valueSet, id = nil)
         hqmf = QDM_HQMF_MAPPING.detect { |x| x[:id] == qdmType }
         unless (hqmf)
-          return nil
+          hqmf = QDM_HQMF_SUBSET_FUNCTIONS.detect { |x| x[:id] == qdmType }
+          return nil unless hqmf
         end
 
         id ||= @data_element_counter

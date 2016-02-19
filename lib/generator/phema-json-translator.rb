@@ -41,6 +41,7 @@ module PhEMA
             }
           }
         }
+        puts measure_definition
         measure_definition = set_phenotype_metadata(phenotype, measure_definition)
         measure = HQMF::Document.from_json(measure_definition)
         measure
@@ -99,8 +100,15 @@ module PhEMA
       # @param element [Hash] The PhEMA element that will be converted
       # @return [Hash] The HDS JSON that defines a data element
       def phema_data_type_to_hds_json element, isSource
+        is_subset_function = @hds_translator.is_subset_function(element["attrs"]["element"]["uri"])
+        if is_subset_function
+          subset_element = element
+          element = get_first_contained_element(subset_element["attrs"]["phemaObject"])[1]
+        end
+
         value_set = get_value_set_for_element element
         result_range = get_result_attribute_for_element element
+        is_age_function = @hds_translator.is_age_function_reference(element["attrs"]["element"]["uri"])
 
         @hds_translator.data_criteria(
           element["attrs"]["element"]["uri"],
@@ -111,14 +119,21 @@ module PhEMA
           false, # Negated?
           false, # Is a variable?
           (isSource ? '' : element["hds_name"]),
-          build_temporal_references_for_element(element),
-          build_subsets_for_element(element)
+          is_age_function ? build_temporal_references_for_age_function(element) : build_temporal_references_for_element(element),
+          build_subsets_for_element(subset_element)
         )
       end
 
       def build_subsets_for_element element
+        return [] if element.nil?
+        phemaObj = element["attrs"]["phemaObject"]
+        value = phemaObj["attributes"]["Value"]
+        hqmf = PhEMA::HealthDataStandards::QDM_HQMF_SUBSET_FUNCTIONS.detect { |x| x[:id] == element["attrs"]["element"]["uri"] }
         [
-          #{"type" => "THIRD"}
+          {
+            "type" => hqmf[:type],
+            "value" => build_range_hash(true, value["operator"], nil, value["valueLow"], value["valueHigh"])
+          }
         ]
       end
 
@@ -191,6 +206,27 @@ module PhEMA
         temporal_references
       end
 
+      # phemaObj - from the PhEMA JSON, this is an element under /attrs/phemaObject
+      def get_first_contained_element phemaObj
+        @id_element_map.find { |key, val| val["id"] == phemaObj["containedElements"][0]["id"] } if phemaObj["containedElements"] && phemaObj["containedElements"].length > 0
+      end
+
+      # This keeps with the special handling of QDM functions that result in an age (e.g. Age At).  They don't
+      # have the typical temporal relationship definition between connectors, so we process differently from
+      # other 
+      def build_temporal_references_for_age_function element
+        phemaObj = element["attrs"]["phemaObject"]
+        value = phemaObj["attributes"]["Value"]
+        contained_element = get_first_contained_element(phemaObj)
+        [
+          {
+            "type" => "SBS",
+            "reference" => contained_element.nil? ? "MeasurePeriod" : contained_element[1]["hds_name"],
+            "range" => build_range_hash(true, value["operator"], value["units"]["id"], value["valueLow"], value["valueHigh"])
+          }
+        ]
+      end
+
       # Build the attributes that have been defined for a specific QDM element
       # @param element [Hash] The PhEMA element we are interested in
       # @return [Hash] The HDS JSON that defines the attributes for the element
@@ -237,6 +273,11 @@ module PhEMA
           else
             range = {}
           end
+        end
+
+        if units.nil?
+          range["high"].delete("unit") if range["high"]
+          range["low"].delete("unit") if range["low"]
         end
 
         range
@@ -317,7 +358,10 @@ module PhEMA
           if child["className"] == "PhemaGroup" or child["className"] == "PhemaConnection"
             @id_element_map[child["id"]] = child
             # Add in the generated name so it's saved and can be reused, but only for datatypes or categories
-            if child["attrs"]["element"]["type"] == "DataElement" or child["attrs"]["element"]["type"] == "Category" or child["attrs"]["element"]["type"] == "SubsetOperator"
+            if child["attrs"]["element"]["type"] == "DataElement" or 
+              child["attrs"]["element"]["type"] == "Category" or
+              child["attrs"]["element"]["type"] == "SubsetOperator" or
+              child["attrs"]["element"]["type"] == "FunctionOperator"
               value_set = get_value_set_for_element child
               @id_element_map[child["id"]]["hds_name"] = @hds_translator.generate_entity_name(child["attrs"]["element"]["uri"], value_set["name"], child["id"])
             end

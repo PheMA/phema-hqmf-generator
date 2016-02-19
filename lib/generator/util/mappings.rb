@@ -96,6 +96,10 @@ module PhEMA
 
       { :id => "http://rdf.healthit.gov/qdm/element#TransferFrom", :name => "TransferFrom", :description => "Transfer From", :type => "", :definition => "transfer_from", :status => "" },
       { :id => "http://rdf.healthit.gov/qdm/element#TransferTo", :name => "TransferTo", :description => "Transfer To", :type => "", :definition => "transfer_to", :status => "" },
+
+      # AgeAt is a funcion, not a data element. However, it translates (in the underlying HQMF) to be a birthdate element with a temporal reference to something else
+      # To account for that, we do the mapping and make it available in the lookup
+      { :id => "http://rdf.healthit.gov/qdm/element#AgeAt", :name => "PatientCharacteristicBirthdate", :description => "Patient Characteristic, Birthdate", :type => "characteristic", :definition => "patient_characteristic_birthdate", :status => "", :code => { "LOINC" => [ "21112-8" ] } },
     ]
 
     QDM_HQMF_LOGICAL_CONJUNCTION_MAPPING = {
@@ -131,5 +135,27 @@ module PhEMA
       "http://rdf.healthit.gov/qdm/element#ConcurrentWith" => "CONCURRENT",
       "http://rdf.healthit.gov/qdm/element#Overlaps" => "OVERLAP"
     }
+
+    QDM_HQMF_AGE_FUNCTIONS = [
+      { :id => "http://rdf.healthit.gov/qdm/element#AgeAt", :description => "Age At" }
+    ]
+
+    QDM_HQMF_SUBSET_FUNCTIONS = [
+      # These are functions that are handled like subsets, per the DER
+      { :id => "http://rdf.healthit.gov/qdm/element#Average", :description => "Average", :type => "MEAN" },
+      { :id => "http://rdf.healthit.gov/qdm/element#Median", :description => "Median", :type => "MEDIAN" },
+      { :id => "http://rdf.healthit.gov/qdm/element#Sum", :description => "Sum", :type => "SUM" },
+      { :id => "http://rdf.healthit.gov/qdm/element#Count", :description => "Count", :type => "COUNT" },
+      { :id => "http://rdf.healthit.gov/qdm/element#Min", :description => "Min", :type => "MIN" },
+      { :id => "http://rdf.healthit.gov/qdm/element#Max", :description => "Max", :type => "MAX" },
+
+      # These are true subset operators, per the DER
+      { :id => "http://rdf.healthit.gov/qdm/element#First", :description => "First", :type => "FIRST" },
+      { :id => "http://rdf.healthit.gov/qdm/element#Second", :description => "Second", :type => "SECOND" },
+      { :id => "http://rdf.healthit.gov/qdm/element#Third", :description => "Third", :type => "THIRD" },
+      { :id => "http://rdf.healthit.gov/qdm/element#Fourth", :description => "Fourth", :type => "FOURTH" },
+      { :id => "http://rdf.healthit.gov/qdm/element#Fifth", :description => "Fifth", :type => "FIFTH" },
+      { :id => "http://rdf.healthit.gov/qdm/element#MostRecent", :description => "Most Recent", :type => "RECENT" },
+    ]
   end
 end
