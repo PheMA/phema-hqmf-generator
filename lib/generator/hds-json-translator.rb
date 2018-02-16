@@ -1,5 +1,5 @@
 module PhEMA
-  module HealthDataStandards
+  module HDS
     class JsonTranslator
       def initialize
         @data_element_counter = 1

@@ -8,8 +8,40 @@ module PhEMA
     # into the Health Data Standards (HDS) JSON format.
     class JsonTranslator
       def initialize
-        @hds_translator = PhEMA::HealthDataStandards::JsonTranslator.new
+        @hds_translator = PhEMA::HDS::JsonTranslator.new
         @id_element_map = Hash.new
+        # TODO: In the future we'll make this configurable
+        @value_set_exporter = PhEMA::Phenotype::ValueSetExporter.new({phema: {name: "PhEMA", repository: "http://projectphema.org:8080/value-sets/"}})
+      end
+
+      # Method to generate a string containing valid HQMF XML
+      def to_hqmf json_string
+        @document = to_hds(json_string)
+        HQMF2::Generator::ModelProcessor.to_hqmf(@document);
+      end
+
+      # Method to generate a string containing an intermediate JSON representation of the measure, as
+      # defined by the health-data-standards library.
+      def to_hds_json json_string
+        @document = to_hds(json_string)
+        @document.to_json.to_json
+      end
+
+      # Generate a CSV string containing value set definitions.
+      def export_value_sets
+        return nil if @document.nil?
+        value_set_oids = @document.source_data_criteria.map do |sdc|
+          sdc.code_list_id if sdc.code_list_id.is_a? String
+        end
+        value_sets = @value_set_exporter.export(value_set_oids)
+
+        csv_output = "value_set_oid,value_set_name,code,description,code_system,code_system_version,code_system_oid,tty\n"
+        value_sets.each do |vs|
+          vs.concepts.each do |c|
+            csv_output << "#{vs.oid},\"#{vs.display_name}\",#{c.code}\,\"#{c.display_name}\",\"#{c.code_system}\",,,\n"
+          end
+        end
+        csv_output
       end
 
       def to_hds json_string
@@ -66,14 +98,6 @@ module PhEMA
         end
 
         measure
-      end
-
-      def to_hqmf json_string
-        HQMF2::Generator::ModelProcessor.to_hqmf(to_hds(json_string));
-      end
-
-      def to_hds_json json_string
-        to_hds(json_string).to_json.to_json
       end
 
       def build_data_criteria isSource
@@ -307,7 +331,7 @@ module PhEMA
           contained_elements.compact!
 
           # Build the HDS structures for this operator
-          hqmf_type = PhEMA::HealthDataStandards::QDM_HQMF_LOGICAL_CONJUNCTION_MAPPING[operator["attrs"]["element"]["uri"]]
+          hqmf_type = PhEMA::HDS::QDM_HQMF_LOGICAL_CONJUNCTION_MAPPING[operator["attrs"]["element"]["uri"]]
           operator_definition = {
             "id" => operator["id"],
             "conjunction_code" => hqmf_type,

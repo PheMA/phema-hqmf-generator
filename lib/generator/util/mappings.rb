@@ -1,5 +1,5 @@
 module PhEMA
-  module HealthDataStandards
+  module HDS
     QDM_HQMF_MAPPING = [
       { :id => "http://rdf.healthit.gov/qdm/element#CareGoal", :name => "CareGoal", :description => "Care Goal", :type => "", :definition => "care_goal", :status => "", :code => { "HL7 Act Code" => [ "ASSERTION" ] } },
 

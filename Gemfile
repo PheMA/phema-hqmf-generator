@@ -3,6 +3,9 @@ source "https://rubygems.org"
 gem 'health-data-standards', :git => 'https://github.com/phema/health-data-standards.git', :branch => 'phema'
 #gem 'health-data-standards', path: '../health-data-standards'
 
+gem 'rest-client'
+gem 'rubyzip'
+
 group :development do
   gem 'rake'
   gem 'pry', '~> 0.9.10'
@@ -18,5 +21,4 @@ group :test do
 
   gem "minitest", "~> 5.0"
   gem 'awesome_print', :require => 'ap'
-
 end
