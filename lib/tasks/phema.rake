@@ -45,10 +45,12 @@ namespace :phema do
       rescue
       end
 
-      begin
-        File.open(csv_file_name, 'w') { |file| file.write(translator.export_value_sets) } if args.export_value_sets
-        zip_files << csv_file_name
-      rescue
+      if args.export_value_sets
+        begin
+          File.open(csv_file_name, 'w') { |file| file.write(translator.export_value_sets) }
+          zip_files << csv_file_name
+        rescue
+        end
       end
 
       # Clean up the zip file if one already exists with the name
