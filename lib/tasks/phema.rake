@@ -4,7 +4,7 @@ require 'json'
 require 'health-data-standards'
 require 'hqmf-parser'
 require 'rubygems'
-require 'zip/zip'
+require 'zip'
 require_relative "../phema-hqmf-generator"
 
 namespace :phema do
@@ -57,7 +57,7 @@ namespace :phema do
       File.delete(args.output) if File.exist?(args.output)
 
       # Now define and create the zip file
-      Zip::ZipFile.open(args.output, Zip::ZipFile::CREATE) do |zipfile|
+      Zip::File.open(args.output, Zip::File::CREATE) do |zipfile|
         zip_files.each do |filename|
           zipfile.add(File.basename(filename), filename)
         end
