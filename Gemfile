@@ -4,7 +4,7 @@ gem 'health-data-standards', :git => 'https://github.com/phema/health-data-stand
 #gem 'health-data-standards', path: '../health-data-standards'
 
 gem 'rest-client'
-gem 'rubyzip'
+gem 'rubyzip', '~> 1.2.1'
 
 group :development do
   gem 'rake'
