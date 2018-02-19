@@ -1,7 +1,7 @@
-source "http://rubygems.org"
+source "https://rubygems.org"
 
-#gem 'health-data-standards', :git => 'https://github.com/phema/health-data-standards.git', :branch => 'phema'
-gem 'health-data-standards', path: '../health-data-standards'
+gem 'health-data-standards', :git => 'https://github.com/phema/health-data-standards.git', :branch => 'phema'
+#gem 'health-data-standards', path: '../health-data-standards'
 
 gem 'rest-client'
 gem 'rubyzip', '~> 1.2.1'
