@@ -150,7 +150,7 @@ module PhEMA
       def build_subsets_for_element element
         return [] if element.nil?
         phemaObj = element["attrs"]["phemaObject"]
-        hqmf = PhEMA::HealthDataStandards::QDM_HQMF_SUBSET_FUNCTIONS.detect { |x| x[:id] == element["attrs"]["element"]["uri"] }
+        hqmf = PhEMA::HDS::QDM_HQMF_SUBSET_FUNCTIONS.detect { |x| x[:id] == element["attrs"]["element"]["uri"] }
         subset = { "type" => hqmf[:type] }
 
         if phemaObj and phemaObj["attributes"]
