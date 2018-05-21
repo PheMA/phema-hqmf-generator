@@ -2,7 +2,7 @@ require 'test_helper'
 
 class HdsJsonTranslatorTest < Minitest::Unit::TestCase
   def setup
-    @translator = PhEMA::HealthDataStandards::JsonTranslator.new
+    @translator = PhEMA::HDS::JsonTranslator.new
   end
 
   def test_measure_score
@@ -81,7 +81,7 @@ class HdsJsonTranslatorTest < Minitest::Unit::TestCase
       nil, false, false, "A", nil, nil )
     assert_equal '1.2.3', result["value"]["code_list_id"]
     assert_equal 'device_allergy', result["definition"]
-    assert_equal 'Device, Allergy', result["description"]
+    assert_equal 'Device, Allergy: (Unspecified)', result["description"]
     assert_equal false, result["hard_status"]
     assert_equal false, result["negation"]
     assert_equal 'A', result["source_data_criteria"]
@@ -118,13 +118,13 @@ class HdsJsonTranslatorTest < Minitest::Unit::TestCase
 
   def test_generate_entity_name
     result = @translator.generate_entity_name('http://rdf.healthit.gov/qdm/element#DiagnosisActive', 'Diabetes Grouping Value Set')
-    assert_equal 'Diagnosis_Active_Diabetes_Grouping_Value_Set_1', result
+    assert_equal 'Diagnosis__Active_Diabetes_Grouping_Value_Set_1', result
     result = @translator.generate_entity_name('http://rdf.healthit.gov/qdm/element#DiagnosisActive', 'Diabetes Grouping Value Set')
-    assert_equal 'Diagnosis_Active_Diabetes_Grouping_Value_Set_2', result
+    assert_equal 'Diagnosis__Active_Diabetes_Grouping_Value_Set_2', result
     result = @translator.generate_entity_name('http://rdf.healthit.gov/qdm/element#DiagnosisActive', 'Diabetes Grouping Value Set', 'A')
-    assert_equal 'Diagnosis_Active_Diabetes_Grouping_Value_Set_A', result
+    assert_equal 'Diagnosis__Active_Diabetes_Grouping_Value_Set_A', result
     result = @translator.generate_entity_name('http://rdf.healthit.gov/qdm/element#DiagnosisActive', 'Diabetes Grouping Value Set')
-    assert_equal 'Diagnosis_Active_Diabetes_Grouping_Value_Set_4', result
+    assert_equal 'Diagnosis__Active_Diabetes_Grouping_Value_Set_4', result
     result = @translator.generate_entity_name('http://rdf.healthit.gov/qdm/element#Unknown', 'Diabetes Grouping Value Set')
     assert_equal nil, result
   end

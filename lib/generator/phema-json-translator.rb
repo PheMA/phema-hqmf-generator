@@ -216,7 +216,7 @@ module PhEMA
             if matching_connector
               end_element = @id_element_map.find { |key, val| val["children"].any?{ |ch| ch["id"] == connection["attrs"]["connectors"]["end"]["id"] } if val["children"] }
               unless end_element.nil?
-                reference = { "reference" => end_element[1]["hds_name"], "type" => PhEMA::HealthDataStandards::QDM_HQMF_TEMPORAL_TYPE_MAPPING[connection["attrs"]["element"]["uri"]] }
+                reference = { "reference" => end_element[1]["hds_name"], "type" => PhEMA::HDS::QDM_HQMF_TEMPORAL_TYPE_MAPPING[connection["attrs"]["element"]["uri"]] }
                 if connection["attrs"]["element"]["timeRange"] and connection["attrs"]["element"]["timeRange"]["comparison"]
                   time_range = connection["attrs"]["element"]["timeRange"]
                   reference["range"] = build_range_hash(true, time_range["comparison"], time_range["start"]["units"], time_range["start"]["value"], time_range["end"]["value"])
