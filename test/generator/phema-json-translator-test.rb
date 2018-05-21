@@ -110,16 +110,16 @@ class PhenotypeJsonTranslatorTest < Minitest::Unit::TestCase
 
   def test_build_range_hash_less_than
     range = @translator.build_range_hash false, "LT", "cm", 5
-    assert_range "IVL_PQ", range["type"], nil, range["low"]["value"], 5, range["high"]["value"], "cm", range["low"]["unit"], range["high"]["unit"]
+    assert_range "IVL_PQ", range["type"], nil, range["low"], 5, range["high"]["value"], "cm", range["low"], range["high"]["unit"]
     range = @translator.build_range_hash false, "<", "cm", 5
-    assert_range "IVL_PQ", range["type"], nil, range["low"]["value"], 5, range["high"]["value"], "cm", range["low"]["unit"], range["high"]["unit"]
+    assert_range "IVL_PQ", range["type"], nil, range["low"], 5, range["high"]["value"], "cm", range["low"], range["high"]["unit"]
   end
 
   def test_build_range_hash_greater_than
     range = @translator.build_range_hash false, "GT", "cm", 5
-    assert_range "IVL_PQ", range["type"], 5, range["low"]["value"], nil, range["high"]["value"], "cm", range["low"]["unit"], range["high"]["unit"]
+    assert_range "IVL_PQ", range["type"], 5, range["low"]["value"], nil, range["high"], "cm", range["low"]["unit"], range["high"]
     range = @translator.build_range_hash false, ">", "cm", 5
-    assert_range "IVL_PQ", range["type"], 5, range["low"]["value"], nil, range["high"]["value"], "cm", range["low"]["unit"], range["high"]["unit"]
+    assert_range "IVL_PQ", range["type"], 5, range["low"]["value"], nil, range["high"], "cm", range["low"]["unit"], range["high"]
   end
 
   def test_build_range_hash_unknown_operator

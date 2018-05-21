@@ -127,7 +127,7 @@ module PhEMA
           "display_name" => valueSet["name"],
           "code_list_id" => get_value_set_oid(qdmType, valueSet),
           "definition" => hqmf[:definition],
-          "description" => hqmf[:description] + ": " + valueSet["name"],
+          "description" => hqmf[:description] + ": " + (valueSet["name"] || '(Unspecified)'),
           "hard_status" => false,
           "negation" => isNegated,
           "source_data_criteria" => sourceId,
@@ -195,7 +195,6 @@ module PhEMA
         id ||= @data_element_counter
         valueSet ||= ''
 
-        #name = (hqmf[:description] + '_' + valueSet).gsub(/[\s,]{2,}/, ' ').gsub(/[\s]/, '_') + '_' + id.to_s
         name = (hqmf[:description] + '_' + valueSet).gsub(/[^0-9a-zA-Z]/, '_')
         name = name + '_' + id.to_s unless id.nil?
         @data_element_counter = @data_element_counter + 1  # Increment, even if it's never used
