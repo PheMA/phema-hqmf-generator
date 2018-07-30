@@ -42,14 +42,18 @@ namespace :phema do
       begin
         File.open(result_file_name, 'w') { |file| file.write(result) }
         zip_files << result_file_name
-      rescue
+      rescue => exception
+        puts "Error during processing: #{$!}"
+        puts exception.backtrace
       end
 
       if args.export_value_sets
         begin
           File.open(csv_file_name, 'w') { |file| file.write(translator.export_value_sets) }
           zip_files << csv_file_name
-        rescue
+        rescue => exception
+          puts "Error during processing: #{$!}"
+          puts exception.backtrace
         end
       end
 

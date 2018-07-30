@@ -19,7 +19,7 @@ GIT
       uuid (~> 2.3.7)
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     activemodel (4.1.16)
       activesupport (= 4.1.16)
@@ -144,4 +144,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.16.1
+   1.16.2

@@ -11,7 +11,10 @@ module PhEMA
         @hds_translator = PhEMA::HDS::JsonTranslator.new
         @id_element_map = Hash.new
         # TODO: In the future we'll make this configurable
-        @value_set_exporter = PhEMA::Phenotype::ValueSetExporter.new({phema: {name: "PhEMA", repository: "http://projectphema.org:8080/value-sets/"}})
+        @value_set_exporter = PhEMA::Phenotype::ValueSetExporter.new({
+          phema: {name: "PhEMA", type: 'cts2', repository: "http://projectphema.org:8080/value-sets/"},
+          vsac: {name: "VSAC", type: 'fhir', repository: "https://cts.nlm.nih.gov/fhir/"}
+        })
       end
 
       # Method to generate a string containing valid HQMF XML
